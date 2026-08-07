@@ -1,0 +1,347 @@
+# AI SUITE PLATFORM — SYSTEM KNOWLEDGE BASE & CONTEXT
+================================================================================
+
+This document serves as the single source of truth and comprehensive knowledge base for the AI Suite (v9) project. It contains details regarding architecture, functional features, sales alignment, business ROI, and technical workflows. It is structured for developers, product managers, sales teams, and AI assistants.
+
+---
+
+## 1. EXECUTIVE SUMMARY
+
+AI Suite is an enterprise-grade, multi-tenant Software-as-a-Service (SaaS) platform that aggregates over 100+ specialized artificial intelligence tools, autonomous agents, and real-time communication modules under a unified, high-performance ecosystem. 
+
+Rather than acting as a simple wrapper around LLM APIs, AI Suite provides a comprehensive, production-ready operating system for business automation. It combines:
+1. **Interactive Content Studios** (No-code website building, presentation generation, game creation, marketing flyer designer).
+2. **Autonomous Execution Agents** (WhatsApp auto-responders, Twilio-integrated phone voice agents, browser-controlling agents).
+3. **Advanced Retrieval-Augmented Generation (RAG)** (Vector-database-driven document search with full-text fallback).
+4. **Real-time Financial Analytics** (Technical trading terminal with real-time indicators and price alerts).
+5. **Multi-Gateway Global Billing** (Seamless checkout and subscription lifecycle handling across 5 major international payment gateways).
+
+### Value Proposition
+AI Suite consolidates fragmented subscriptions (Chat GPT, Midjourney, Suno, ElevenLabs, Twilio, WhatsApp business tools, TradingView, Canva, and Wix) into a single, cohesive, token-metered workspace. By doing so, it decreases corporate SaaS spend by up to 70%, increases operational efficiency, and accelerates time-to-market for marketing campaigns, content generation, website publishing, and customer communication.
+
+---
+
+## 2. TECHNOLOGY STACK & SYSTEM ARCHITECTURE
+
+```mermaid
+graph TD
+    User([End User / Visitor]) -->|HTTPS| Middleware[Next.js Middleware]
+    
+    %% Routing Paths
+    Middleware -->|Subdomain / Custom Domain Rewrite| SitesPage[Static Site Renderer /sites]
+    Middleware -->|Standard Route| AppRouter[Next.js App Router /app]
+    
+    %% App Core
+    AppRouter -->|Auth Checks| APIStream[AI Stream Route /api/ai/stream]
+    AppRouter -->|Auth Checks| APIRoutes[Other API Routes /api]
+    
+    %% Background / External Agents
+    Twilio((Twilio System)) <-->|TwiML Webhooks| VoiceAgentAPI[/api/twilio/voice & /api/calls]
+    WhatsApp((WhatsApp Network)) <-->|Baileys Socket| WAManager[WhatsApp Manager Instance]
+    
+    %% Storage & AI Sourcing
+    APIStream -->|Database Wrapper| DB[(PostgreSQL Database)]
+    APIStream -->|Axios Client| KieAPI[Kie.ai API Gateway]
+    APIStream -->|SDK / Fetch| ModelAPIs{Model Providers: Gemini, OpenAI, Groq, NVIDIA}
+    
+    %% Billing Webhooks
+    Stripe((Stripe Gateway)) -->|Webhooks| WebhookAPI[/api/webhook/stripe]
+    PayPal((PayPal Gateway)) -->|Webhooks| WebhookAPI2[/api/webhook/paypal]
+    Paystack((Paystack Gateway)) -->|Webhooks| WebhookAPI3[/api/webhook/paystack]
+```
+
+### 2.1 Backend Stack
+* **Framework**: Next.js (App Router, Node.js runtime).
+* **Language**: TypeScript (strict-mode type safety).
+* **Database**: PostgreSQL (Supabase-hosted), utilizing the `pg` pool connector for maximum throughput. No ORM or Supabase Client is used for transactional queries, in alignment with repository guidelines.
+* **Database Schema Configuration**: A single source of truth defined in [schema.sql](file:///c:/sairam/applications/AI%20Suite/v9/ai%20suite/database/schema.sql), deployed programmatically using a custom migration runner in [migrate.ts](file:///c:/sairam/applications/AI%20Suite/v9/ai%20suite/database/migrate.ts).
+
+### 2.2 Frontend Stack
+* **Core**: React 19, Next.js.
+* **Styling**: Vanilla CSS with custom properties mapping to a premium dark-themed system in [globals.css](file:///c:/sairam/applications/AI%20Suite/v9/ai%20suite/app/globals.css), combined with Tailwind CSS for utility styles.
+* **Animations**: Framer Motion for premium micro-interactions.
+* **Visual Components**: Radix UI primitives, Lucide Icons, Shadcn components.
+* **Mobile Ready**: Progressive Web App (PWA) configuration using `@ducanh2912/next-pwa` for desktop and mobile installation.
+
+### 2.3 Authentication, Security & Guardrails
+* **Custom JWT Session Management**: Handled via the `jose` library. Sessions are stored in HTTP-only cookies.
+* **Access Control Middleware**: The [middleware.ts](file:///c:/sairam/applications/AI%20Suite/v9/ai%20suite/middleware.ts) script intercepts requests, verifying JWT signatures, validating administrator privilege levels for `/admin` routes, and matching requested paths against the user's `disabled_features` array.
+* **Two-Factor Authentication (2FA)**: Fully implemented in the database and [totp.ts](file:///c:/sairam/applications/AI%20Suite/v9/ai%20suite/src/lib/totp.ts) using RFC 6238-compliant TOTP algorithms with Base32 serialization and AES-256-GCM encryption for credentials stored at rest. Includes secure backup recovery codes.
+* **Rate Limiting**: Custom sliding-window in-memory rate-limiter in [rate-limiter.ts](file:///c:/sairam/applications/AI%20Suite/v9/ai%20suite/src/lib/rate-limiter.ts) to protect auth routes, 2FA validation, and email verification from brute-force exploits.
+* **Twilio Signature Verification**: Ensures Twilio inbound voice webhooks are cryptographically signed by Twilio, preventing caller spoofing.
+* **Idempotent Billing Integration**: Webhook event IDs are logged in the `webhook_events` table prior to execution, preventing double token allocation or duplicate subscription updates.
+
+---
+
+## 3. CORE SUB-STUDIOS & FUNCTIONAL TOOLS
+
+AI Suite organizes its capabilities into specialized functional modules. Each is detailed below from both technical and business viewpoints.
+
+### 3.1 AI Marketing Studio & Video Reel Engine
+* **Business Purpose**: Dramatically lowers graphic design and video production costs. Eliminates agency fees by letting users generate high-converting ads, visuals, video reels, and logos instantly.
+* **Technical Flow**:
+  1. Integrates with **Kie.ai** APIs to leverage state-of-the-art visual models.
+  2. **Image Gen**: Uses **Flux-2** (`flux-2/pro-text-to-image` and `flux-2/pro-image-to-image`) for realistic brand assets.
+  3. **Video Gen**: Leverages **Grok-Imagine** (`grok-imagine/text-to-video` and `grok-imagine/image-to-video`) and **Kling AI** for smooth, cinematic 6-second video generation.
+  4. **Music Gen**: Connects to the **Suno API** to generate full, custom-length musical backing tracks based on style and prompt.
+  5. **Audio Isolation**: Integrates **ElevenLabs Audio Isolation** to split vocal tracks from instrumentals.
+  6. **Reel Generator**: A state-machine controlled pipeline ([reel-service.ts](file:///c:/sairam/applications/AI%20Suite/v9/ai%20suite/src/lib/reel-service.ts)) that drafts a storyboard/script using Gemini, triggers video scene generation, matches voiceovers (ElevenLabs TTS), and compiles the final video asset directly into the user's library.
+  7. **Flyer/Business Card/Brochure Designers**: Integrates the **Fabric.js** HTML5 canvas library, allowing users to load AI-generated layouts, add custom text layers, move objects, and export high-resolution print files.
+
+### 3.2 Dynamic Website Builder
+* **Business Purpose**: Provides instant landing page and website creation for marketing campaigns, products, or temporary events. Bypasses the complexity of hosting platforms by providing instant publishing.
+* **Technical Flow**:
+  1. The user inputs a text prompt describing the desired website (e.g., "Sleek SaaS landing page for an organic juice brand").
+  2. The system prompts a model (e.g., **Llama 3.1/3.2** or **Gemini**) using a comprehensive system prompt ([route.ts](file:///c:/sairam/applications/AI%20Suite/v9/ai%20suite/app/api/ai/stream/route.ts)) that enforces clean layout architecture, typography, responsiveness, and Tailwind utility styling.
+  3. The model returns single-page static HTML code with styled Tailwind CSS.
+  4. The code is saved to the `websites` database table, associated with a unique user subdomain (e.g., `juice-brand`).
+  5. **DNS/Subdomain serving**: The Next.js middleware detects request host headers. If the request matches `subdomain.base-domain.com`, it performs an internal rewrite to `/sites/[subdomain]`.
+  6. The route handler ([route.ts](file:///c:/sairam/applications/AI%20Suite/v9/ai%20suite/app/sites/%5Bsubdomain%5D/route.ts)) fetches the code from the DB and returns it as a direct HTML response with `Content-Type: text/html`. No file compilation, server deployment, or bucket storage is required. Serving is instantaneous.
+  7. **Custom Domains**: Users can register a custom domain mapped to their website. The middleware rewrites the host to `/sites/custom/[domain]`, which checks the `custom_domains` mapping table and serves the page directly.
+
+### 3.3 AI Voice Agent (Twilio Call Center Integration)
+* **Business Purpose**: Automates inbound customer support and outbound sales calls. Provides natural, warm, and zero-latency human-like interactions at a fraction of the cost of physical call centers.
+* **Technical Flow**:
+  1. The user configures their voice agent ([voice_agent_config](file:///c:/sairam/applications/AI%20Suite/v9/ai%20suite/database/schema.sql)): sets name, system prompt, personality, voice ID (such as **Amazon Polly Neural** or Google TTS), greeting message, maximum call duration, and silence timeout.
+  2. When a call is received or initiated via Twilio, Twilio triggers the voice webhook endpoint.
+  3. The system constructs an initial TwiML (XML) response using a `<Gather>` block configured with `speechTimeout="auto"` and `speechModel="phone_call"` ([twilio-service.ts](file:///c:/sairam/applications/AI%20Suite/v9/ai%20suite/src/lib/voice-agent/twilio-service.ts)).
+  4. Once the user speaks, Twilio sends the transcribed text to the webhook callback.
+  5. The webhook loads the call history from the database, builds a conversational system prompt enforcing voice-only rules (1-3 sentences, no markdown, spelled out numbers), and calls **Gemini 2.5 Flash** for rapid text generation.
+  6. The generated response is wrapped in a new `<Say>` and `<Gather>` TwiML block and returned to Twilio.
+  7. When the call ends, duration and complete transcripts are logged in `voice_calls` and `voice_transcripts` for admin review and audit logging.
+
+### 3.4 WhatsApp AI Auto-Responder
+* **Business Purpose**: Automates business communication on WhatsApp. Acts as a round-the-clock sales representative that answers inquiries, books appointments, and nurtures leads automatically.
+* **Technical Flow**:
+  1. Built on top of `@whiskeysockets/baileys` (a lightweight node implementation of WhatsApp Web API).
+  2. **Session Persistence**: Instead of relying on local files which break during serverless redeployments, the WhatsApp authentication credentials (`creds.data`) are serialized into base64 format and synchronized in the `whatsapp_sessions` database table ([manager.ts](file:///c:/sairam/applications/AI%20Suite/v9/ai%20suite/src/lib/whatsapp/manager.ts)).
+  3. **SSE Connection Status**: Uses Server-Sent Events (SSE) to stream connection states (`connecting`, `qr`, `connected`, `error`) and QR code data URLs straight to the user dashboard.
+  4. **Incoming Message Handler**: When a message is received, the system verifies if the agent is active, checks the target number whitelist (if configured), validates if the user has enough token balance for the transaction, and sends the incoming text to Gemini or OpenAI.
+  5. **Response Delay**: The user can configure a custom delay (in seconds) to make the auto-replies appear natural and human-like.
+  6. All conversations are logged in `whatsapp_logs` and tokens are deducted from the user's credit balance.
+
+### 3.5 RAG (Retrieval-Augmented Generation) & Knowledge Base
+* **Business Purpose**: Ground AI outputs in company data. Users upload corporate documents (PDF, DOCX, TXT) to create a custom search index, ensuring the AI support widget answers questions using factual, verified data.
+* **Technical Flow**:
+  1. When a document is uploaded, it is routed to [docProcessor.ts](file:///c:/sairam/applications/AI%20Suite/v9/ai%20suite/src/lib/docProcessor.ts).
+  2. **Text Extraction**: Uses `pdf2json` for PDF files, `mammoth` for DOCX, and standard string encoding for TXT.
+  3. **Chunking**: Splits text into 1,000-character segments with a 200-character overlap, aligning chunk boundaries with periods or word breaks.
+  4. **Embedding Generation**: Chunks are processed via the Google GenAI SDK using `models/gemini-embedding-001` with an output dimensionality of 768.
+  5. **Database Storage**: Embeddings are saved to the `document_chunks` table utilizing the **pgvector** Postgres extension with an **HNSW index** for high-speed cosine similarity searches (`vector_cosine_ops`).
+  6. **Query Classification**: Bypasses document search for simple greetings or non-alphabetic/math input using `isDocumentQuery` to reduce query latency and database load.
+  7. **Hybrid Search System**:
+     - *Phase 1*: Performs vector similarity search with a high threshold of `0.45` via the `match_document_chunks` database function.
+     - *Phase 2*: If zero results are found, it falls back to a lower vector threshold of `0.30`.
+     - *Phase 3*: If vector search still yields nothing, it executes a full-text English keyword search fallback (`keyword_search_chunks`) utilizing a GIN index on generated tsvectors.
+  8. **Model Cascade**: Grounded replies are generated by cascading through available models: trying `gemini-2.5-flash` -> `gemini-2.5-pro` -> `gemini-1.5-flash` -> `gemini-1.5-pro` -> `gemini-2.0-flash-exp`. If Google APIs fail, it falls back to OpenAI `gpt-4o-mini`, and finally to NVIDIA `meta/llama-3.1-8b-instruct`.
+
+### 3.6 Trading Terminal & Market Sourcing
+* **Business Purpose**: Delivers financial market analysis, indicator math, price alerting, and paper trading under a unified interface.
+* **Technical Flow**:
+  1. **Market Data**: Sourced from public endpoints. Sourced from Yahoo Finance for global stocks and Forex pairs (mapped as `EURUSD=X`), and CoinGecko for cryptocurrencies (mapped to CoinGecko IDs) ([market-data.ts](file:///c:/sairam/applications/AI%20Suite/v9/ai%20suite/src/lib/market-data.ts)).
+  2. **Cache & Rate Limits**: Implements an in-memory `TTLCache` (30s for quotes, 5 min for history) and token-bucket rate limiters for third-party APIs to prevent IP blocking.
+  3. **Technical Indicators**: Written in pure TypeScript ([indicators.ts](file:///c:/sairam/applications/AI%20Suite/v9/ai%20suite/src/lib/indicators.ts)) calculating SMA, EMA, RSI, MACD, Bollinger Bands, Stochastic RSI, ATR, VWAP, Fibonacci Retracement levels, and Pivot Point Support/Resistance detection.
+  4. **Candlestick Pattern Engine**: Scans historical price bars to identify patterns (Doji, Hammer, Shooting Star, Bullish/Bearish Engulfing, Morning/Evening Star).
+  5. **Price Alerts**: Users configure triggers (`price_above`, `price_below`, `rsi_above`, etc.) in the `trading_alerts` table, processed to notify users of market breakouts.
+  6. **Paper Trading Portfolio**: Tracks buy/sell execution logs, calculating live PnL and average entry prices.
+
+---
+
+## 4. COMPLETE LIST OF AI TOOLS (100+ DIRECTORY)
+
+Below is an index of all functional tools, organized by their respective sidebar category:
+
+| Category | Tool ID | Tool Name | Business Problem Solved |
+| :--- | :--- | :--- | :--- |
+| **AI Marketing** | `marketing-dashboard` | Marketing Studio | Centralized marketing analytics and asset generation. |
+| | `marketing-image` | Image Generator | Instantly generate high-definition marketing graphics. |
+| | `marketing-video` | Video Generator | Text-to-video ad creation without video editors. |
+| | `reel-generator` | Reels Generator | Automatic video reel layout creation for social media. |
+| | `avatar-studio` | Avatar Generator | Consistent virtual avatars for brand presentation. |
+| | `logo-generator` | Logo Generator | Instant logo designs for new brand launches. |
+| | `manga-generator` | Manga Generator | Comic and stylized manga creation for creative campaigns. |
+| | `thumbnail-maker` | Thumbnail Maker | High click-through rate (CTR) thumbnails for video platforms. |
+| | `flyer-designer` | Flyer Designer | Interactive canvas-based business flyers and graphics. |
+| | `business-card-designer` | Business Card Designer | Custom business card layout tool with print export. |
+| | `brochure-designer` | Brochure Designer | Tri-fold and pamphlet layout design. |
+| **Core Tools** | `website` | Website Builder | Instant single-page sites mapped to subdomains. |
+| | `pitch-deck` | Pitch Deck | Clean corporate presentation generator. |
+| | `browser-control` | Browser Control | Autonomous agent that browses and parses websites. |
+| | `voice-agent` | AI Voice Agent | Twilio-powered virtual phone assistant. |
+| | `music-generator` | Music Generator | AI-synthesized music tracks for audio backgrounds. |
+| | `support-agent` | Live Chat | Embedded user support widget. |
+| | `ai-meeting` | AI Meeting | Real-time meeting transcription and note generation. |
+| | `game-maker` | Game Developer | Generates playable interactive HTML5 canvas games. |
+| | `chat` | AI Chat | General conversational search and RAG knowledge assistant. |
+| | `code` | Code Generator | Multi-language code compiler and structure builder. |
+| | `translator` | Translation Hub | Instant localized multi-language text translation. |
+| | `website-wiki` | Website Wiki | Generates documentation based on site content. |
+| **Social Auto Reply** | `whatsapp-agent` | WhatsApp Agent | Multi-session WhatsApp AI auto-responder. |
+| | `instagram-agent` | Instagram Agent | Automated Instagram DM handler (Coming Soon). |
+| | `facebook-agent` | Facebook Agent | Automated Facebook Messenger handler (Coming Soon). |
+| **Trading** | `trading-terminal` | Trading Terminal | Charting dashboard with indicators and paper trading. |
+| **Writing** | `writer` | Content Writer | Multi-purpose document and blog copywriter. |
+| | `blog-post` | Blog Post | Long-form blog post draft generation. |
+| | `article-writer` | Article Writer | Structured article writer with section layout. |
+| | `summary` | Summarizer | Condense long PDFs or articles. |
+| | `headline-generator` | Headlines | High CTR headline generator for ads. |
+| | `content-improver` | Content Improver | Rewrites text for clarity and impact. |
+| | `story` | Story Writer | Creative story writing with plot development. |
+| | `poem-generator` | Poem Generator | Stylized poetry generator for creative contexts. |
+| | `grammar` | Grammar Check | Professional editing and syntax checking. |
+| | `paraphraser` | Paraphraser | Sentence rephrasing tool. |
+| | `tone-converter` | Tone Converter | Switch content tone (e.g., casual to professional). |
+| **Social Media** | `social` | Social Suite | Cross-platform social media copy coordinator. |
+| | `instagram-caption` | Instagram Caption | Hook-driven captions with matching hashtags. |
+| | `twitter-thread` | Twitter/X Thread | Viral thread sequencing from single topics. |
+| | `linkedin-post` | LinkedIn Post | Thought leadership and professional networking posts. |
+| | `youtube-description` | YouTube | Video descriptions optimized for video SEO. |
+| | `hashtag-generator` | Hashtags | Generate trending relevant hashtags. |
+| | `content-calendar` | Content Calendar | 30-day social media planning scheduler. |
+| **Marketing** | `email` | Email Assistant | Sales copy and customer email auto-drafter. |
+| | `google-ads` | Google Ads | High-converting Search Network ad copy. |
+| | `facebook-ads` | Facebook Ads | Captivating social media ad copies. |
+| | `landing-page-copy` | Landing Page | Landing page structure copywriting. |
+| | `sales-pitch` | Sales Pitch | Structured sales scripts and pitches. |
+| | `marketing-plan` | Marketing Plan | Campaign timeline and channel strategy. |
+| | `competitor-analysis` | Competitor Analysis | Strategic review of industry competitors. |
+| | `ab-test-copy` | A/B Test Copy | Generate alternative headlines for testing. |
+| | `buyer-persona` | Buyer Persona | Customer avatar modeling. |
+| | `pricing-page-copy` | Pricing Page Copy | SaaS pricing tier descriptions. |
+| **Business** | `business-plan` | Business Plan | Formal business plan generator. |
+| | `meeting` | Meeting Notes | Action item summaries from call transcripts. |
+| | `job-description` | Job Description | Clear, standard hiring descriptions. |
+| | `resume` | Resume Builder | Custom resume generation. |
+| | `interview` | Interview Prep | Mock interview questions and advice. |
+| | `finance` | Finance Helper | Expense tracking and pricing calculators. |
+| | `contract-generator` | Contracts | Professional business and freelancer contracts. |
+| | `swot-analysis` | SWOT Analysis | Identify Strengths, Weaknesses, Opportunities, Threats. |
+| | `invoice-memo` | Invoice Memo | Business billing memos. |
+| | `onboarding-checklist` | Onboarding Checklist | Employee or customer onboarding lists. |
+| **Development** | `sql` | SQL Builder | Generate DB queries from plain English. |
+| | `bug-fix` | Bug Fix | Debug stack traces and code snippets. |
+| | `code-reviewer` | Code Review | Security and performance review of code. |
+| | `api-docs` | API Docs | Swagger/Markdown API documentation. |
+| | `readme-generator` | README | Complete repository documentation. |
+| | `regex-generator` | Regex | Construct regular expressions. |
+| | `unit-test` | Unit Tests | Jest, PyTest, or JUnit test suites. |
+| | `ocr` | OCR Tool | Optical Character Recognition from uploaded files. |
+| | `cron-expression` | Cron Builder | Human readable explanation and cron format builder. |
+| | `docker-compose` | Docker Compose | Generate multi-container configurations. |
+| | `env-template` | .env Template | Clean environment variable templates. |
+| | `gitignore-generator` | Git Ignore | Standard .gitignore files per framework. |
+| **Education** | `quiz` | Quiz Generator | Flashcards and multiple choice tests. |
+| | `lesson-plan` | Lesson Plan | Teacher course curriculum developer. |
+| | `study-guide` | Study Guide | Outline structures from textbook chapters. |
+| | `flashcard-generator` | Flashcards | Interactive revision flashcards. |
+| | `math-solver` | Math Solver | Step-by-step mathematical problem explanations. |
+| | `rubric-generator` | Rubric Generator | Academic grading frameworks. |
+| | `vocabulary-builder` | Vocabulary Builder | Language and terminology lists. |
+| | `debate-prep` | Debate Prep | Construct arguments for and against topics. |
+| **Creative** | `recipe` | Recipe Generator | Meal planning based on pantry ingredients. |
+| | `story-ideas` | Story Ideas | Outline generation for creative writing. |
+| | `character-creator` | Characters | Visual and textual personality sheets for fiction. |
+| | `song-lyrics` | Song Lyrics | Rhyming song lyrics based on mood and genre. |
+| | `joke-generator` | Jokes | Humorous jokes and wordplay. |
+| | `name-generator` | Name Generator | Generate brand names or fictional names. |
+| **Legal** | `privacy-policy` | Privacy Policy | Site privacy statements. |
+| | `terms-of-service` | Terms of Service | standard website user terms. |
+| | `disclaimer-generator` | Disclaimer | Liability and business disclaimer statements. |
+| | `refund-policy` | Refund Policy | E-commerce return policy statements. |
+| **SEO** | `meta-description` | Meta Description | Optimised SEO tags. |
+| | `keyword-research` | Keywords | Discover search volumes and variations. |
+| | `seo-audit` | SEO Audit | Actionable checklists for on-page SEO. |
+| | `schema-markup` | Schema Markup | JSON-LD schema generation for search engine rich results. |
+| **Personal** | `sentiment` | Sentiment Analysis | Evaluate customer feedback tone. |
+| | `journal-prompt` | Journal Prompts | Reflective thinking prompts. |
+| | `goal-setting` | Goal Setting | Smart goal trackers. |
+| | `motivation-booster` | Motivation | Encouraging quotes and task strategies. |
+| **AI Agents** | `research-agent` | Research Agent | Deep internet search and aggregation agent. |
+| | `writing-agent` | Writing Agent | Iterative content and document creation agent. |
+| | `code-agent` | Code Agent | Interactive software developer agent. |
+| | `marketing-agent` | Marketing Agent | Autonomous campaign and ad management agent. |
+| **Data Analytics**| `data-visualizer` | Data Visualizer | Graphical rendering of metrics. |
+| | `csv-analyzer` | CSV Analyzer | Column analysis of uploaded spreadsheets. |
+| | `survey-builder` | Survey Builder | Customer feedback form structure. |
+| | `kpi-dashboard` | KPI Dashboard | Key performance indicators monitor. |
+| **Design & UX** | `color-palette` | Color Palette | Harmonious color scheme selector. |
+| | `ui-copy-writer` | UI Copy Writer | App microcopy, modals, and error message text. |
+| | `accessibility-checker` | Accessibility | WCAG compliance checklists. |
+| | `wireframe-describer` | Wireframe Spec | Turn mockup descriptions into functional requirements. |
+| **Health** | `symptom-journal` | Symptom Journal | Track wellness metrics and logs. |
+| | `meal-plan` | Meal Plan | Caloric and dietary meal calendar. |
+| | `workout-routine` | Workout Builder | Exercise plans based on fitness goals. |
+| **Communication** | `apology-drafter` | Apology Drafter | Professional customer resolution letters. |
+| | `negotiation-script` | Negotiation Script | Strategy scripts for vendor or salary discussions. |
+| | `elevator-pitch` | Elevator Pitch | Condensed summaries for networking. |
+| **Other** | `playground` | Playground | Raw chat interface for unstructured testing. |
+| | `ppt-playground` | PPT Playground | Interactive slides editor and generator. |
+| | `blank` | Blank Template | Standard empty document workspace. |
+
+---
+
+## 5. BUSINESS & SALES PERSPECTIVE
+
+### 5.1 Customer Pain Points Addressed
+* **Subscription Bloat**: Organizations pay separately for ChatGPT Plus ($20/mo), Midjourney ($30/mo), Suno ($30/mo), ElevenLabs ($22/mo), Twilio routing ($50+/mo), and domain hosting ($20/mo). AI Suite aggregates these services under a single dashboard, dramatically lowering corporate SaaS costs.
+* **Complex Development Cycles**: Launching custom web pages or simple internal tools requires hiring engineering resources. AI Suite allows non-technical business teams to generate code and host landing pages instantly on subdomains or custom domains.
+* **Manual Customer Inquiries**: Staff spend hours resolving recurring WhatsApp questions or answering simple support calls. AI Suite auto-responders and voice agents provide immediate resolution 24/7.
+* **High Creative Overhead**: Producing social media assets, ad creatives, copy, and videos requires expensive agencies. The Marketing Studio allows teams to rapidly generate copy, image ads, and video reels.
+
+### 5.2 ROI & Value Proposition
+* **Cost Efficiency**: Shifting from multiple single-purpose subscriptions to AI Suite's unified token-based tier model reduces software costs by up to 70-80%.
+* **Time Savings**: Generating a complete business plan, presentation, website, or flyer takes minutes instead of days.
+* **Revenue Uplift**: Continuous auto-responding on WhatsApp ensures customer leads are captured and nurtured instantly, increasing conversion rates.
+* **24/7 Availability**: Voice agents handle support calls at any time of night, reducing ticket backlogs without increasing headcount.
+
+---
+
+## 6. END-TO-END SYSTEM WORKFLOWS
+
+### 6.1 Workflow: Instant Website Creation and Publishing
+```
+1. [User Prompt] -> "Launch a website for a local bakery named Sweet Treats."
+2. [API Request] -> Dispatched to `/api/ai/stream`.
+3. [Token Validation] -> Deducts 100 tokens from the user's balance.
+4. [Generation] -> Calls model. Generates responsive single-page HTML/Tailwind code.
+5. [Save DB] -> Website record is stored with user email, name, and chosen subdomain `sweettreats`.
+6. [Access] -> User visits `http://sweettreats.domain.com`.
+7. [Middleware] -> Next.js interceptor rewrites to `/sites/sweettreats`.
+8. [Service] -> Database returns the HTML code directly to the browser.
+```
+
+### 6.2 Workflow: Incoming Twilio Voice Call Automation
+```
+1. [Inbound Call] -> Customer dials the Twilio phone number.
+2. [TwiML Initial] -> Twilio hits `/api/twilio/voice`, receiving TwiML saying the greeting message.
+3. [Customer Speech] -> Customer asks: "Are you open on Sundays?"
+4. [Twilio Callback] -> Twilio transcribes the speech and posts to the callback endpoint.
+5. [DB Lookup] -> Agent config and conversation history are retrieved.
+6. [AI Inference] -> Gemini 2.5 Flash processes the prompt: "The customer asks 'Are you open on Sundays?' Answer in 1-2 sentences using the prompt context: 'Closed on Sundays'."
+7. [TwiML Return] -> Webhook generates TwiML: `<Say>We are closed on Sundays.</Say> <Gather>...`
+8. [Call End] -> Twilio updates call status. Call duration and transcripts are logged.
+```
+
+### 6.3 Workflow: WhatsApp Auto-Responder Execution
+```
+1. [Customer Message] -> Customer sends "Hey, is my order ready?" on WhatsApp.
+2. [Baileys Web Socket] -> WhatsApp manager detects the message event.
+3. [Ownership check] -> Resolves WhatsApp number to active user email from `whatsapp_agents`.
+4. [Token Check] -> Verifies user has at least 5 tokens.
+5. [AI Inference] -> Dispatches query to Gemini 2.5 Flash using the configured system prompt.
+6. [Delay Timer] -> Waits for the configured response delay.
+7. [Send Message] -> Sends the generated response using the Baileys socket.
+8. [Log & Charge] -> Deducts 5 tokens and logs the interaction details in `whatsapp_logs`.
+```
+
+---
+
+## 7. ASSUMPTIONS & DESIGN LIMITATIONS
+
+* **In-Memory Caching and Rate-Limiting**: The `TTLCache` and rate-limit structures are stored in-memory (per process). In multi-instance deployments (such as serverless scaling on Vercel), rate-limiting states and market data cache will not be shared across instances. For high-scale multi-instance setups, moving this state to a shared Redis layer should be considered.
+* **Serverless Execution Limits**: The streaming API endpoint has a configured maximum duration of 60 seconds. While sufficient for text models, complex video or reel generation tasks must run asynchronously. Statuses are polled via `/jobs/recordInfo` rather than waiting for generation to complete synchronously.
+* **Database Access Constraint**: Repository guidelines dictate using only the `pg` package for database operations. ORM dependencies are bypassed to maintain lightweight database connection pooling.
+* **WhatsApp Session Management**: Since WhatsApp accounts connect via Baileys web sockets, scaling to hundreds of concurrent accounts will create multiple network streams. Session credential storage in database blobs helps maintain state, but scaling this architecture requires isolated runner microservices for each socket node.
+* **Twilio Webhook Public Exposure**: The Twilio webhook relies on Vercel protection bypass cookies if Vercel automation bypass is enabled. In production, signature validation must be active to prevent request spoofing.
+
+================================================================================
