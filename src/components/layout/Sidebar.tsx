@@ -135,6 +135,7 @@ import {
     CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import { navigationCategories, type NavItem, type NavCategory } from "@/lib/sidebar-routes";
+import { BrandLogo } from "@/components/brand/BrandLogo";
 
 interface NavItemComponentProps {
     item: NavItem;
@@ -368,31 +369,12 @@ function SidebarContent({ isCollapsed, isMobile, onClose, onToggleCollapse }: Si
             )}>
                 {(!isCollapsed || isMobile) && (
                     <Link href="/" className="flex items-center gap-2.5">
-                        <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-primary via-sky-400 to-ai-secondary flex items-center justify-center shadow-lg shadow-primary/25 ring-1 ring-white/10 overflow-hidden">
-                            {settings?.metadata?.logoUrl ? (
-                                <img src={settings.metadata.logoUrl} alt="Logo" className="w-full h-full object-cover" />
-                            ) : (
-                                <Sparkles className="w-5 h-5 text-white" />
-                            )}
-                        </div>
-                        <div className="flex items-center gap-2">
-                            <div className="flex items-center gap-2">
-                                <span className="font-bold text-lg tracking-tight">
-                                    {settings?.metadata?.siteName || "AI Suite"}
-                                </span>
-                            </div>
-                        </div>
+                        <BrandLogo className="h-9" imageClassName="h-9 max-w-[138px]" />
                     </Link>
                 )}
 
                 {isCollapsed && !isMobile && (
-                    <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-primary via-sky-400 to-ai-secondary flex items-center justify-center shadow-lg shadow-primary/25 ring-1 ring-white/10 overflow-hidden">
-                        {settings?.metadata?.logoUrl ? (
-                            <img src={settings.metadata.logoUrl} alt="Logo" className="w-full h-full object-cover" />
-                        ) : (
-                            <Sparkles className="w-5 h-5 text-white" />
-                        )}
-                    </div>
+                    <BrandLogo variant="mark" className="h-9 w-9 shadow-lg shadow-primary/25 ring-1 ring-white/10" />
                 )}
 
                 {!isMobile && (

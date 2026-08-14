@@ -34,6 +34,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 import { useSettings } from "@/contexts/SettingsContext";
 import { RecaptchaProvider, useRecaptcha } from "@/components/auth/RecaptchaProvider";
+import { BrandLogo } from "@/components/brand/BrandLogo";
 
 interface Feature {
     icon: LucideIcon;
@@ -124,7 +125,7 @@ function RegisterContent({ isAdmin = false }: RegisterPageProps) {
                     });
                 } else {
                     toast({
-                        title: `Welcome to ${settings?.metadata?.siteName || "AI Suite"}!`,
+                        title: `Welcome to ${settings?.metadata?.siteName || "TingAi"}!`,
                         description: "Your account has been created successfully.",
                     });
 
@@ -200,14 +201,7 @@ function RegisterContent({ isAdmin = false }: RegisterPageProps) {
 
                 <div className="relative z-10 flex flex-col justify-between p-12 text-white">
                     <Link href="/" className="flex items-center gap-3">
-                        <div className="p-2.5 bg-white/20 backdrop-blur-sm rounded-xl overflow-hidden w-11 h-11 flex items-center justify-center">
-                            {settings?.metadata?.logoUrl ? (
-                                <img src={settings.metadata.logoUrl} alt="Logo" className="w-full h-full object-cover" />
-                            ) : (
-                                <Sparkles className="w-6 h-6" />
-                            )}
-                        </div>
-                        <span className="text-2xl font-bold">{settings?.metadata?.siteName || "AI Suite"}</span>
+                        <BrandLogo imageClassName="h-11 max-w-[172px]" />
                     </Link>
 
                     <div className="space-y-8">
@@ -218,7 +212,7 @@ function RegisterContent({ isAdmin = false }: RegisterPageProps) {
                                 Journey Today
                             </h1>
                             <p className="text-lg text-white/80 max-w-md">
-                                Join thousands of creators and professionals using {settings?.metadata?.siteName || "AI Suite"}.
+                                Join thousands of creators and professionals using {settings?.metadata?.siteName || "TingAi"}.
                             </p>
                         </div>
 
@@ -241,7 +235,7 @@ function RegisterContent({ isAdmin = false }: RegisterPageProps) {
 
                         <div className="p-6 bg-white/10 backdrop-blur-sm rounded-2xl">
                             <p className="text-white/90 mb-4">
-                                "{settings?.metadata?.siteName || "AI Suite"} transformed how I create content. What used to take hours now takes minutes."
+                                "{settings?.metadata?.siteName || "TingAi"} transformed how I create content. What used to take hours now takes minutes."
                             </p>
 
                             <div className="flex items-center gap-3">
@@ -257,7 +251,7 @@ function RegisterContent({ isAdmin = false }: RegisterPageProps) {
                     </div>
 
                     <p className="text-sm text-white/60">
-                        © 2026 {settings?.metadata?.siteName || "AI Suite"}. All rights reserved.
+                        © 2026 {settings?.metadata?.siteName || "TingAi"}. All rights reserved.
                     </p>
                 </div>
             </div>
@@ -317,14 +311,7 @@ function RegisterContent({ isAdmin = false }: RegisterPageProps) {
                     >
                         <div className="lg:hidden flex justify-center mb-8">
                             <Link href="/" className="flex items-center gap-2">
-                                <div className="p-2 bg-gradient-to-br from-primary to-ai-secondary rounded-xl overflow-hidden w-9 h-9 flex items-center justify-center">
-                                    {settings?.metadata?.logoUrl ? (
-                                        <img src={settings.metadata.logoUrl} alt="Logo" className="w-full h-full object-cover" />
-                                    ) : (
-                                        <Sparkles className="w-5 h-5 text-white" />
-                                    )}
-                                </div>
-                                <span className="text-xl font-bold gradient-text-primary">{settings?.metadata?.siteName || "AI Suite"}</span>
+                                <BrandLogo imageClassName="h-9 max-w-[142px]" />
                             </Link>
                         </div>
 

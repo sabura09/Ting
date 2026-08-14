@@ -33,15 +33,15 @@ export function Layout({ children, fullHeight = false, noPadding = false }: Layo
                     className="absolute inset-0 opacity-80"
                     style={{
                         background:
-                            "linear-gradient(135deg, hsl(222 47% 4%) 0%, hsl(219 45% 7%) 45%, hsl(222 47% 4%) 100%)",
+                            "linear-gradient(135deg, hsl(var(--background)) 0%, hsl(var(--muted) / 0.46) 45%, hsl(var(--background)) 100%)",
                     }}
                 />
                 <div
-                    className="absolute inset-0 opacity-[0.055]"
+                    className="absolute inset-0 opacity-[0.045] dark:opacity-[0.055]"
                     style={{
                         backgroundImage: `
-                            linear-gradient(to right, hsl(210 40% 96%) 1px, transparent 1px),
-                            linear-gradient(to bottom, hsl(210 40% 96%) 1px, transparent 1px)
+                            linear-gradient(to right, hsl(var(--foreground)) 1px, transparent 1px),
+                            linear-gradient(to bottom, hsl(var(--foreground)) 1px, transparent 1px)
                         `,
                         backgroundSize: "44px 44px",
                     }}

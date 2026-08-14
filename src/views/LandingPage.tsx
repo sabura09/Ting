@@ -62,6 +62,7 @@ import ChatWidget from "@/components/chat/ChatWidget";
 import { useSettings } from "@/contexts/SettingsContext";
 import { TOOLS_COUNT_DISPLAY } from "@/lib/constants";
 import { getSummerVibesMusic } from "@/actions/music-generator";
+import { BrandLogo } from "@/components/brand/BrandLogo";
 
 // --- Configuration ---
 
@@ -315,7 +316,7 @@ export default function LandingPage() {
 
     const testimonials = [
         {
-            quote: `${settings?.metadata?.siteName || "This Ai suite"} has completely transformed how I create content. What used to take hours now takes minutes.`,
+            quote: `${settings?.metadata?.siteName || "TingAi"} has completely transformed how I create content. What used to take hours now takes minutes.`,
 
             author: "Sarah Chen",
             role: "Content Marketing Manager",
@@ -485,17 +486,7 @@ export default function LandingPage() {
             >
                 <div className="container mx-auto px-4 flex items-center justify-between">
                     <Link href="/" className="flex items-center gap-2.5 group">
-                        <div className="relative">
-                            <div className="absolute inset-0 bg-primary/30 rounded-xl blur-lg group-hover:bg-primary/40 transition-all" />
-                            <div className="relative p-2 bg-gradient-to-br from-primary to-ai-secondary rounded-xl overflow-hidden w-9 h-9 flex items-center justify-center">
-                                {settings?.metadata?.logoUrl ? (
-                                    <img src={settings.metadata.logoUrl} alt="Logo" className="w-full h-full object-cover" />
-                                ) : (
-                                    <Sparkles className="w-5 h-5 text-white" />
-                                )}
-                            </div>
-                        </div>
-                        <span className="text-xl font-bold gradient-text-primary">{settings?.metadata?.siteName || "AI Suite"}</span>
+                        <BrandLogo imageClassName="h-9 max-w-[142px]" />
                     </Link>
 
                     {/* Desktop Navigation */}
@@ -1412,7 +1403,7 @@ export default function LandingPage() {
                                 Ready to Transform Your Workflow?
                             </h2>
                             <p className="text-lg md:text-xl text-white/80 max-w-2xl mx-auto">
-                                Join 50,000+ creators and professionals using {settings?.metadata?.siteName || "AI Suite"} to work smarter.
+                                Join 50,000+ creators and professionals using {settings?.metadata?.siteName || "TingAi"} to work smarter.
                             </p>
 
                             <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
@@ -1439,14 +1430,7 @@ export default function LandingPage() {
                     <div className="grid md:grid-cols-4 gap-12 mb-12">
                         <div className="col-span-1 md:col-span-2 space-y-4">
                             <Link href="/" className="flex items-center gap-2">
-                                <div className="p-2 bg-gradient-to-br from-primary to-ai-secondary rounded-xl overflow-hidden w-9 h-9 flex items-center justify-center">
-                                    {settings?.metadata?.logoUrl ? (
-                                        <img src={settings.metadata.logoUrl} alt="Logo" className="w-full h-full object-cover" />
-                                    ) : (
-                                        <Sparkles className="w-5 h-5 text-white" />
-                                    )}
-                                </div>
-                                <span className="text-xl font-bold">{settings?.metadata?.siteName || "AI Suite"}</span>
+                                <BrandLogo imageClassName="h-9 max-w-[142px]" />
                             </Link>
                             <p className="text-muted-foreground max-w-sm">
                                 {settings?.metadata?.siteDescription || "The complete AI toolkit for modern creators and professionals. Built with cutting-edge technology."}
@@ -1477,7 +1461,7 @@ export default function LandingPage() {
                     </div>
                     <div className="border-t border-border/40 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
                         <p className="text-sm text-muted-foreground">
-                            © 2026 {settings?.metadata?.siteName || "AI Suite"}. All rights reserved.
+                            © 2026 {settings?.metadata?.siteName || "TingAi"}. All rights reserved.
                         </p>
 
                         <div className="flex gap-6">

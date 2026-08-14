@@ -27,6 +27,7 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { useSettings } from "@/contexts/SettingsContext";
 import { RecaptchaProvider, useRecaptcha } from "@/components/auth/RecaptchaProvider";
+import { BrandLogo } from "@/components/brand/BrandLogo";
 
 type Step = "EMAIL" | "OTP" | "RESET" | "SUCCESS";
 
@@ -231,14 +232,7 @@ function ForgotPasswordContent() {
         {/* Logo */}
         <div className="flex justify-center mb-8">
           <Link href="/" className="flex items-center gap-2">
-            <div className="p-2 bg-gradient-to-br from-primary to-ai-secondary rounded-xl overflow-hidden w-9 h-9 flex items-center justify-center">
-              {settings?.metadata?.logoUrl ? (
-                <img src={settings.metadata.logoUrl} alt="Logo" className="w-full h-full object-cover" />
-              ) : (
-                <Sparkles className="w-5 h-5 text-white" />
-              )}
-            </div>
-            <span className="text-xl font-bold gradient-text-primary">{settings?.metadata?.siteName || "AI Suite"}</span>
+            <BrandLogo imageClassName="h-9 max-w-[142px]" />
           </Link>
         </div>
 

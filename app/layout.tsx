@@ -23,7 +23,7 @@ import { supabaseAdmin } from "@/lib/supabase";
 export const revalidate = 0;
 
 export async function generateMetadata(): Promise<Metadata> {
-    let siteName = "AI Suite";
+    let siteName = "TingAi";
     let description = "The most powerful AI productivity suite. Access 135+ AI tools including chatbots, content generators, code assistants, image creators, and autonomous AI agents. Powered by advanced AI models.";
     let keywords = [
         "AI",
@@ -93,8 +93,8 @@ export async function generateMetadata(): Promise<Metadata> {
             creator: "@aisuite",
         },
         icons: {
-            icon: "/favicon.ico",
-            shortcut: "/favicon-16x16.png",
+            icon: "/favicon.png",
+            shortcut: "/favicon.ico",
             apple: "/icons/icon-192x192.png",
         },
         manifest: "/manifest.json",

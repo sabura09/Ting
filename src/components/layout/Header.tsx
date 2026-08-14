@@ -33,6 +33,7 @@ import { ApiKeyDialog } from "@/components/ui/dialog-api-key";
 import { AVAILABLE_MODELS, getModelById } from "@/lib/models";
 import { useToast } from "@/hooks/use-toast";
 import { GlobalSearch } from "@/components/layout/GlobalSearch";
+import { BrandLogo } from "@/components/brand/BrandLogo";
 
 interface HeaderProps {
     onMobileMenuToggle?: () => void;
@@ -157,16 +158,7 @@ export function Header({ onMobileMenuToggle, isCollapsed }: HeaderProps) {
                                 href="/dashboard"
                                 className="hidden lg:flex items-center gap-2"
                             >
-                                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-ai-secondary flex items-center justify-center shadow-lg shadow-primary/20 overflow-hidden">
-                                    {settings?.metadata?.logoUrl ? (
-                                        <img src={settings.metadata.logoUrl} alt="Logo" className="w-full h-full object-cover" />
-                                    ) : (
-                                        <Sparkles className="w-4 h-4 text-white" />
-                                    )}
-                                </div>
-                                <span className="font-bold text-lg tracking-tight">
-                                    {settings?.metadata?.siteName || "AI Suite"}
-                                </span>
+                                <BrandLogo imageClassName="h-8 max-w-[124px]" />
                             </Link>
                         )}
 
