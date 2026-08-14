@@ -20,7 +20,7 @@ export function RTLToggle() {
                     size="icon"
                     onClick={toggleRTL}
                     className={cn(
-                        "h-9 w-9 relative overflow-hidden transition-all hover:bg-muted/50 hover:text-black",
+                        "h-9 w-9 relative overflow-hidden transition-all hover:bg-muted/70 hover:text-foreground",
                         isRTL && "bg-primary/10 text-primary hover:bg-primary/20"
                     )}
                 >

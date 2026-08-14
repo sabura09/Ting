@@ -3,18 +3,18 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const inputVariants = cva(
-    "flex w-full rounded-xl border bg-background text-foreground transition-all duration-200 file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50",
+    "flex w-full rounded-xl border bg-background text-foreground shadow-sm shadow-black/15 transition-all duration-200 file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50",
     {
         variants: {
             variant: {
                 default:
-                    "border-input focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none",
+                    "border-input bg-card/[0.55] focus:border-primary focus:bg-background/85 focus:ring-2 focus:ring-primary/[0.24] focus:outline-none",
                 filled:
-                    "bg-muted/50 border-transparent focus:bg-background focus:border-primary focus:ring-2 focus:ring-primary/20",
+                    "bg-muted/[0.65] border-transparent focus:bg-background/85 focus:border-primary focus:ring-2 focus:ring-primary/[0.24]",
                 ghost:
                     "border-transparent bg-transparent hover:bg-muted/50 focus:bg-muted/50 focus:ring-0",
                 glass:
-                    "bg-white/50 dark:bg-gray-900/50 backdrop-blur-md border-white/30 dark:border-gray-700/50 focus:border-primary/50 focus:ring-2 focus:ring-primary/20",
+                    "bg-white/[0.08] backdrop-blur-md border-white/15 focus:border-primary/50 focus:ring-2 focus:ring-primary/[0.24]",
             },
             inputSize: {
                 default: "h-11 px-4 py-2 text-sm",
@@ -126,16 +126,16 @@ SearchInput.displayName = "SearchInput";
 
 // Textarea with similar styling
 const textareaVariants = cva(
-    "flex min-h-[100px] w-full rounded-xl border bg-background px-4 py-3 text-sm transition-all duration-200 placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 resize-none",
+    "flex min-h-[100px] w-full rounded-xl border bg-card/[0.55] px-4 py-3 text-sm text-foreground shadow-sm shadow-black/15 transition-all duration-200 placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 resize-none",
     {
         variants: {
             variant: {
                 default:
-                    "border-input focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none",
+                    "border-input focus:border-primary focus:bg-background/85 focus:ring-2 focus:ring-primary/[0.24] focus:outline-none",
                 filled:
-                    "bg-muted/50 border-transparent focus:bg-background focus:border-primary focus:ring-2 focus:ring-primary/20",
+                    "bg-muted/[0.65] border-transparent focus:bg-background/85 focus:border-primary focus:ring-2 focus:ring-primary/[0.24]",
                 glass:
-                    "bg-white/50 dark:bg-gray-900/50 backdrop-blur-md border-white/30 dark:border-gray-700/50 focus:border-primary/50 focus:ring-2 focus:ring-primary/20",
+                    "bg-white/[0.08] backdrop-blur-md border-white/15 focus:border-primary/50 focus:ring-2 focus:ring-primary/[0.24]",
             },
         },
         defaultVariants: {

@@ -19,7 +19,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
             <SettingsProvider>
                 <RTLProvider>
                     <LanguageProvider>
-                        <ThemeProvider defaultTheme="light" storageKey="ai-suite-theme">
+                        <ThemeProvider defaultTheme="dark" storageKey="ai-suite-theme">
                             <AuthProvider>
                                 <TooltipProvider>
                                     {children}

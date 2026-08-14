@@ -137,9 +137,7 @@ export function Header({ onMobileMenuToggle, isCollapsed }: HeaderProps) {
             <ApiKeyDialog open={apiKeyDialogOpen} onOpenChange={setApiKeyDialogOpen} />
             <GlobalSearch open={searchOpen} onOpenChange={setSearchOpen} />
 
-            <header className="sticky top-0 z-40 h-16 bg-transparent transition-all duration-300">
-                {/* Subtle gradient overlay removed to ensure complete transparency at the top */}
-
+            <header className="sticky top-0 z-40 h-16 border-b border-border/[0.55] bg-background/[0.62] backdrop-blur-2xl shadow-[0_18px_48px_-42px_rgb(0_0_0)] transition-all duration-300">
                 <div className="relative flex items-center justify-between h-full px-4 lg:px-6">
                     {/* Left Section */}
                     <div className="flex items-center gap-4">
@@ -178,9 +176,9 @@ export function Header({ onMobileMenuToggle, isCollapsed }: HeaderProps) {
                                 onClick={() => setSearchOpen(true)}
                                 className={cn(
                                     "relative group transition-all duration-300 flex items-center text-left",
-                                    "w-64 lg:w-80 h-10 rounded-xl px-3",
-                                    "bg-muted/40 hover:bg-muted/60",
-                                    "focus:bg-background focus:ring-2 focus:ring-primary/10",
+                                    "w-64 lg:w-80 h-10 rounded-xl px-3 border border-border/70",
+                                    "bg-muted/[0.45] hover:bg-muted/70 hover:border-primary/30",
+                                    "focus:bg-background focus:ring-2 focus:ring-primary/20",
                                     "text-muted-foreground transition-all duration-200"
                                 )}
                             >
@@ -327,7 +325,7 @@ export function Header({ onMobileMenuToggle, isCollapsed }: HeaderProps) {
                                         <Button
                                             variant="outline"
                                             size="sm"
-                                            className="flex items-center gap-2 hover:bg-muted/50 hover:text-black h-9 px-2 sm:px-3 rounded-xl bg-primary/5 transition-all outline-none border-none"
+                                            className="flex items-center gap-2 hover:bg-muted/70 hover:text-foreground h-9 px-2 sm:px-3 rounded-xl bg-primary/10 transition-all outline-none border border-primary/15"
                                         >
                                             {selectedModelData?.provider === 'google' ? (
                                                 <Sparkles className="w-3.5 h-3.5 text-blue-500" />
@@ -426,7 +424,7 @@ export function Header({ onMobileMenuToggle, isCollapsed }: HeaderProps) {
                             <DropdownMenuTrigger asChild>
                                 <Button
                                     variant="ghost"
-                                    className="h-10 gap-2 px-2 hover:bg-muted/50 hover:text-black rounded-xl"
+                                    className="h-10 gap-2 px-2 hover:bg-muted/70 hover:text-foreground rounded-xl"
                                 >
                                     <Avatar className="w-8 h-8 ring-2 ring-primary/10">
                                         <AvatarImage />

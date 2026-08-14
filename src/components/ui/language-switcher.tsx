@@ -26,7 +26,7 @@ export function LanguageSwitcher() {
                 <Button
                     variant="ghost"
                     size="sm"
-                    className="h-9 gap-1.5 px-2.5 hover:bg-muted/50 hover:text-black"
+                    className="h-9 gap-1.5 px-2.5 hover:bg-muted/70 hover:text-foreground"
                 >
                     <Globe className="w-4 h-4" />
                     <span className="text-xs font-medium hidden sm:inline-block uppercase">
