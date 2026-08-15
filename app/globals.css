@@ -1230,6 +1230,91 @@
   opacity: 0;
 }
 
+/* Landing page technology surfaces */
+.tech-border-flow {
+  position: relative;
+  isolation: isolate;
+  border-color: transparent !important;
+}
+
+.tech-border-flow::before {
+  position: absolute;
+  z-index: 20;
+  inset: 0.5px;
+  padding: 2px;
+  border-radius: inherit;
+  pointer-events: none;
+  content: "";
+  background: linear-gradient(90deg, rgba(103, 232, 249, 0.36) 0%, rgba(103, 232, 249, 0.48) 18%, rgba(255, 255, 255, 0.96) 31%, rgba(139, 92, 246, 0.86) 43%, rgba(244, 114, 182, 0.62) 62%, rgba(103, 232, 249, 0.42) 82%, rgba(103, 232, 249, 0.36) 100%);
+  background-size: 220% 100%;
+  opacity: 0.9;
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: tech-border-travel 5.5s linear infinite;
+}
+
+.tech-scan-surface {
+  position: relative;
+  isolation: isolate;
+}
+
+.tech-scan-surface::after {
+  position: absolute;
+  z-index: 15;
+  inset-inline: 8%;
+  top: -20%;
+  height: 18%;
+  pointer-events: none;
+  content: "";
+  background: linear-gradient(180deg, transparent, rgba(103, 232, 249, 0.08), rgba(255, 255, 255, 0.18), transparent);
+  filter: blur(1px);
+  animation: tech-scan-travel 7s ease-in-out infinite;
+}
+
+.tech-line-runner {
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(103, 232, 249, 0.2) 24%, rgba(103, 232, 249, 0.95) 38%, rgba(139, 92, 246, 0.95) 52%, rgba(244, 114, 182, 0.85) 64%, transparent 82%);
+  background-size: 260% 100%;
+  box-shadow: 0 0 22px rgba(139, 92, 246, 0.3);
+  animation: tech-line-travel 4.5s linear infinite;
+}
+
+@keyframes tech-border-travel {
+  from { background-position: 110% 0; }
+  to { background-position: -110% 0; }
+}
+
+@keyframes tech-scan-travel {
+  0%, 14% { transform: translateY(-120%); opacity: 0; }
+  24% { opacity: 1; }
+  72% { opacity: 0.75; }
+  86%, 100% { transform: translateY(780%); opacity: 0; }
+}
+
+@keyframes tech-line-travel {
+  from { background-position: 140% 0; }
+  to { background-position: -80% 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tech-border-flow::before,
+  .tech-scan-surface::after,
+  .tech-line-runner {
+    animation: none;
+  }
+}
+
+@media (max-width: 767px) {
+  .tech-border-flow::before {
+    animation-duration: 8.5s;
+  }
+
+  .tech-scan-surface::after {
+    display: none;
+  }
+}
+
 /* =================================================================
    TRADING TERMINAL CUSTOM LAYOUT FIXES
    ================================================================= */
