@@ -1231,6 +1231,111 @@
 }
 
 /* Landing page technology surfaces */
+.ting-landing-orange {
+  --background: 0 0% 2%;
+  --foreground: 30 20% 96%;
+  --card: 20 8% 6%;
+  --card-foreground: 30 20% 96%;
+  --muted: 20 7% 11%;
+  --muted-foreground: 24 7% 64%;
+  --border: 22 10% 17%;
+  --primary: 24 95% 53%;
+  --primary-foreground: 0 0% 100%;
+  --ai-primary: 24 95% 53%;
+  --ai-secondary: 38 96% 55%;
+  --ai-tertiary: 188 86% 49%;
+  background-color: #050505;
+}
+
+.ting-landing-orange .section-heading-modern {
+  text-align: left;
+}
+
+.ting-landing-orange .orange-cta,
+.ting-landing-orange .orange-header-cta {
+  border: 1px solid rgba(255, 210, 150, 0.34) !important;
+  color: #fff !important;
+  background: linear-gradient(135deg, #ff9f1c 0%, #f97316 48%, #ea580c 100%) !important;
+  box-shadow: 0 18px 55px -20px rgba(249, 115, 22, 0.88), inset 0 1px 0 rgba(255, 255, 255, 0.24) !important;
+}
+
+.ting-landing-orange .orange-cta {
+  min-height: 54px;
+  padding-inline: 1.8rem;
+  border-radius: 12px;
+  font-size: 0.96rem;
+  font-weight: 850;
+}
+
+.ting-landing-orange .orange-header-cta {
+  min-height: 42px;
+  padding-inline: 1.15rem;
+  border-radius: 10px;
+  font-weight: 800;
+}
+
+.ting-landing-orange .orange-cta:hover,
+.ting-landing-orange .orange-header-cta:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.08);
+  box-shadow: 0 24px 70px -22px rgba(249, 115, 22, 0.95), inset 0 1px 0 rgba(255, 255, 255, 0.28) !important;
+}
+
+.ting-landing-orange .orange-cta-secondary {
+  min-height: 54px;
+  padding-inline: 1.8rem;
+  border: 1px solid rgba(251, 146, 60, 0.28) !important;
+  border-radius: 12px;
+  color: #fff !important;
+  background: rgba(17, 15, 13, 0.82) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 16px 45px -28px rgba(249, 115, 22, 0.7) !important;
+}
+
+.ting-landing-orange .tech-border-flow {
+  border-radius: 12px !important;
+  background-color: rgba(12, 11, 10, 0.9) !important;
+  background-image: linear-gradient(145deg, rgba(255, 255, 255, 0.035), transparent 42%, rgba(249, 115, 22, 0.035)) !important;
+}
+
+.ting-landing-orange [class*="text-fuchsia"],
+.ting-landing-orange [class*="text-purple"] {
+  color: #fbbf24 !important;
+}
+
+.ting-landing-orange [class*="bg-fuchsia"],
+.ting-landing-orange [class*="bg-purple"] {
+  background-color: rgba(249, 115, 22, 0.1) !important;
+}
+
+@media (min-width: 1024px) {
+  .ting-landing-orange .section-heading-modern {
+    display: grid;
+    grid-template-columns: minmax(0, 1.25fr) minmax(280px, 0.75fr);
+    column-gap: 4rem;
+    align-items: end;
+  }
+
+  .ting-landing-orange .section-heading-modern > :first-child {
+    grid-column: 1;
+    width: max-content;
+    justify-self: start;
+  }
+
+  .ting-landing-orange .section-heading-modern > h2 {
+    grid-column: 1;
+    max-width: 780px;
+    margin-inline: 0;
+  }
+
+  .ting-landing-orange .section-heading-modern > p {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    align-self: end;
+    max-width: 520px;
+    margin-inline: 0;
+  }
+}
+
 .tech-border-flow {
   position: relative;
   isolation: isolate;
@@ -1245,7 +1350,7 @@
   border-radius: inherit;
   pointer-events: none;
   content: "";
-  background: linear-gradient(90deg, rgba(103, 232, 249, 0.36) 0%, rgba(103, 232, 249, 0.48) 18%, rgba(255, 255, 255, 0.96) 31%, rgba(139, 92, 246, 0.86) 43%, rgba(244, 114, 182, 0.62) 62%, rgba(103, 232, 249, 0.42) 82%, rgba(103, 232, 249, 0.36) 100%);
+  background: linear-gradient(90deg, rgba(249, 115, 22, 0.38) 0%, rgba(251, 146, 60, 0.62) 18%, rgba(255, 244, 214, 0.98) 31%, rgba(245, 158, 11, 0.92) 45%, rgba(34, 211, 238, 0.6) 63%, rgba(249, 115, 22, 0.5) 82%, rgba(249, 115, 22, 0.38) 100%);
   background-size: 220% 100%;
   opacity: 0.9;
   -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
@@ -1274,7 +1379,7 @@
 
 .tech-line-runner {
   height: 1px;
-  background: linear-gradient(90deg, transparent 0%, rgba(103, 232, 249, 0.2) 24%, rgba(103, 232, 249, 0.95) 38%, rgba(139, 92, 246, 0.95) 52%, rgba(244, 114, 182, 0.85) 64%, transparent 82%);
+  background: linear-gradient(90deg, transparent 0%, rgba(249, 115, 22, 0.18) 24%, rgba(251, 146, 60, 0.95) 38%, rgba(245, 158, 11, 0.98) 52%, rgba(34, 211, 238, 0.72) 64%, transparent 82%);
   background-size: 260% 100%;
   box-shadow: 0 0 22px rgba(139, 92, 246, 0.3);
   animation: tech-line-travel 4.5s linear infinite;

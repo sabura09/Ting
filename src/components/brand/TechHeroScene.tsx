@@ -48,7 +48,7 @@ export function TechHeroScene() {
         const ambient = new THREE.AmbientLight(0xffffff, 0.72);
         scene.add(ambient);
 
-        const key = new THREE.PointLight(0x8b5cf6, 5.8, 18);
+        const key = new THREE.PointLight(0xf97316, 6.4, 18);
         key.position.set(-3.6, 3.2, 5);
         scene.add(key);
 
@@ -68,9 +68,9 @@ export function TechHeroScene() {
         const star = new THREE.Mesh(
             starGeometry,
             new THREE.MeshPhysicalMaterial({
-                color: 0xffffff,
-                metalness: 0.08,
-                roughness: 0.22,
+                color: 0xffd2a1,
+                metalness: 0.24,
+                roughness: 0.18,
                 clearcoat: 0.8,
                 clearcoatRoughness: 0.15,
             })
@@ -82,7 +82,7 @@ export function TechHeroScene() {
         const core = new THREE.Mesh(
             new THREE.IcosahedronGeometry(1.95, 3),
             new THREE.MeshPhysicalMaterial({
-                color: 0x8b5cf6,
+                color: 0xf97316,
                 transparent: true,
                 opacity: 0.16,
                 metalness: 0.18,
@@ -102,9 +102,9 @@ export function TechHeroScene() {
         group.add(innerHalo);
 
         const rings = [
-            { radius: 2.65, color: 0x8b5cf6, x: 1.15, y: 0.25, z: 0.08 },
+            { radius: 2.65, color: 0xf97316, x: 1.15, y: 0.25, z: 0.08 },
             { radius: 3.12, color: 0x22d3ee, x: -0.72, y: 1.05, z: -0.28 },
-            { radius: 3.55, color: 0xf472b6, x: 0.25, y: -0.84, z: 0.48 },
+            { radius: 3.55, color: 0xfbbf24, x: 0.25, y: -0.84, z: 0.48 },
         ].map((ring) => {
             const mesh = new THREE.Mesh(
                 new THREE.TorusGeometry(ring.radius, 0.012, 16, 220),
@@ -139,7 +139,7 @@ export function TechHeroScene() {
             const z = Math.sin(index * 1.7) * 0.32;
             const start = new THREE.Vector3(Math.cos(angle) * startRadius, Math.sin(angle) * startRadius, z);
             const end = new THREE.Vector3(Math.cos(angle) * endRadius, Math.sin(angle) * endRadius, z * 0.35);
-            const color = index % 3 === 0 ? 0x67e8f9 : index % 3 === 1 ? 0x8b5cf6 : 0xf472b6;
+            const color = index % 3 === 0 ? 0x67e8f9 : index % 3 === 1 ? 0xf97316 : 0xfbbf24;
             const geometry = new THREE.BufferGeometry().setFromPoints([start, end]);
             const material = new THREE.LineBasicMaterial({ color, transparent: true, opacity: 0.2 });
             rayGeometries.push(geometry);
@@ -170,7 +170,7 @@ export function TechHeroScene() {
         const dots = new THREE.Points(
             dotGeometry,
             new THREE.PointsMaterial({
-                color: 0xbfd7ff,
+                color: 0xffd8ad,
                 size: 0.024,
                 transparent: true,
                 opacity: 0.68,

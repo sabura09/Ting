@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
+import NextImage from "next/image";
 import { motion, useScroll, useTransform, AnimatePresence, type Variants } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
@@ -63,7 +64,6 @@ import { useSettings } from "@/contexts/SettingsContext";
 import { TOOLS_COUNT_DISPLAY } from "@/lib/constants";
 import { getSummerVibesMusic } from "@/actions/music-generator";
 import { BrandLogo } from "@/components/brand/BrandLogo";
-import { TechHeroScene } from "@/components/brand/TechHeroScene";
 
 // --- Configuration ---
 
@@ -81,15 +81,15 @@ interface Feature {
 
 // Animation variants
 const fadeInUp: Variants = {
-    hidden: { opacity: 0, y: 26 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.52, ease: "easeOut" } },
+    hidden: { opacity: 0, y: 18 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: "easeOut" } },
 };
 
 const staggerContainer: Variants = {
     hidden: { opacity: 0 },
     visible: {
         opacity: 1,
-        transition: { staggerChildren: 0.055, delayChildren: 0.04 },
+        transition: { staggerChildren: 0.035, delayChildren: 0.02 },
     },
 };
 
@@ -463,9 +463,9 @@ export default function LandingPage() {
     }, []);
 
     return (
-        <div ref={pageRef} className="dark h-screen overflow-x-hidden overflow-y-auto bg-[#03040a] text-slate-100">
+        <div ref={pageRef} className="ting-landing-orange dark h-screen overflow-x-hidden overflow-y-auto bg-[#050505] text-slate-100">
             <motion.div
-                className="fixed inset-x-0 top-0 z-[70] h-[2px] origin-left bg-gradient-to-r from-cyan-300 via-primary to-fuchsia-400 shadow-[0_0_18px_hsl(var(--primary))]"
+                className="fixed inset-x-0 top-0 z-[70] h-[2px] origin-left bg-gradient-to-r from-orange-300 via-primary to-amber-300 shadow-[0_0_18px_hsl(var(--primary))]"
                 style={{ scaleX: scrollYProgress }}
             />
             {/* Animated Background */}
@@ -475,7 +475,7 @@ export default function LandingPage() {
                 <div className="absolute inset-0 bg-[linear-gradient(115deg,transparent_0%,hsl(var(--primary)/0.09)_34%,transparent_56%,hsl(var(--ai-secondary)/0.08)_100%)]" />
                 <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,hsl(var(--foreground)/0.08),transparent_42%)] dark:bg-[radial-gradient(ellipse_at_top,hsl(var(--foreground)/0.055),transparent_44%)]" />
                 <motion.div className="absolute -left-48 top-[14%] h-[30rem] w-[30rem] rounded-full bg-cyan-400/[0.08] blur-[110px]" animate={{ x: [0, 150, 25, 0], y: [0, 90, 180, 0], scale: [1, 1.16, 0.94, 1] }} transition={{ duration: 24, repeat: Infinity, ease: "easeInOut" }} />
-                <motion.div className="absolute -right-56 top-[38%] h-[34rem] w-[34rem] rounded-full bg-fuchsia-500/[0.08] blur-[120px]" animate={{ x: [0, -130, -35, 0], y: [0, 160, -60, 0], scale: [0.9, 1.08, 1.2, 0.9] }} transition={{ duration: 29, repeat: Infinity, ease: "easeInOut" }} />
+                <motion.div className="absolute -right-56 top-[38%] h-[34rem] w-[34rem] rounded-full bg-orange-500/[0.08] blur-[120px]" animate={{ x: [0, -130, -35, 0], y: [0, 160, -60, 0], scale: [0.9, 1.08, 1.2, 0.9] }} transition={{ duration: 29, repeat: Infinity, ease: "easeInOut" }} />
             </div>
 
             {/* Header */}
@@ -513,17 +513,15 @@ export default function LandingPage() {
                         <ThemeToggle />
                         <div className="flex items-center gap-3">
                             {settings?.showDemoMode !== false && (
-                                <Link href="https://mounikai.com/product/a9921866-35a4-41d0-a137-23483d06e0b7" target="_blank" rel="noopener noreferrer">
-                                    <Button size="sm" className="border border-amber-300/20 bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-lg shadow-amber-950/30 hover:from-amber-400 hover:to-orange-400">
-                                        Buy Now
-                                    </Button>
+                                <Link href="https://mounikai.com/product/a9921866-35a4-41d0-a137-23483d06e0b7" target="_blank" rel="noopener noreferrer" className="text-sm font-bold text-orange-300 transition-colors hover:text-orange-200">
+                                    Lifetime access
                                 </Link>
                             )}
                             <Link href="/login" target="_blank" rel="noopener noreferrer">
                                 <Button variant="ghost" size="sm" className="hover:bg-white/10">Log in</Button>
                             </Link>
                             <Link href="/register" target="_blank" rel="noopener noreferrer">
-                                <Button size="sm" className="shadow-lg shadow-primary/20">Get Started Free</Button>
+                                <Button size="sm" className="orange-header-cta">Get Started Free</Button>
                             </Link>
                         </div>
                     </nav>
@@ -597,27 +595,27 @@ export default function LandingPage() {
                     >
                         <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-primary/25 bg-primary/10 px-3 py-1.5 text-xs font-bold uppercase text-primary shadow-[0_0_24px_hsl(var(--primary)/0.16)]">
                             <span className="h-1.5 w-1.5 rounded-full bg-ai-secondary shadow-[0_0_12px_hsl(var(--ai-secondary))]" />
-                            TingAi Neural Workspace
+                            TingAi Intelligence OS
                         </div>
 
                         <h1 className="text-balance text-5xl font-black leading-[0.95] tracking-tight text-foreground sm:text-6xl lg:text-7xl xl:text-8xl">
-                            Build with an AI cockpit, not another dashboard.
+                            One <span className="text-orange-400">AI operating system</span> for serious work.
                         </h1>
 
                         <p className="mt-6 max-w-xl text-base leading-8 text-muted-foreground sm:text-lg lg:text-xl">
-                            TingAi brings chat, content, code, images, web creation, marketing, and automation into one sharp command center for serious creative work.
+                            Move from prompt to production with writing, code, media, research and automation running inside one focused workspace.
                         </p>
 
                         <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center lg:justify-start">
                             <Link href="/login" target="_blank" rel="noopener noreferrer">
-                                <Button size="xl" className="w-full sm:w-auto">
-                                    Launch Workspace
+                                <Button size="xl" className="orange-cta w-full sm:w-auto">
+                                    Start building free
                                     <ArrowRight className="h-5 w-5" />
                                 </Button>
                             </Link>
                             <Link href="#tools">
-                                <Button size="xl" variant="outline" className="w-full border-primary/25 bg-card/[0.55] sm:w-auto">
-                                    Explore Tools
+                                <Button size="xl" variant="outline" className="orange-cta-secondary w-full sm:w-auto">
+                                    Explore the platform
                                 </Button>
                             </Link>
                         </div>
@@ -637,28 +635,48 @@ export default function LandingPage() {
                     </motion.div>
 
                     <motion.div
-                        className="relative mx-auto aspect-square w-full max-w-[680px]"
+                        className="relative mx-auto min-h-[480px] w-full max-w-[720px] lg:min-h-[680px]"
                         initial={false}
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         transition={{ duration: 0.7, delay: 0.12 }}
                     >
-                        <div className="absolute inset-[5%] rounded-full bg-[radial-gradient(circle_at_48%_46%,rgba(139,92,246,0.2),rgba(7,13,24,0.72)_48%,rgba(3,4,10,0)_72%)] shadow-[0_0_140px_-45px_rgba(103,232,249,0.65)]" />
-                        <motion.div className="absolute inset-[8%] rounded-full border border-cyan-300/20" animate={{ rotate: 360 }} transition={{ duration: 28, repeat: Infinity, ease: "linear" }}>
-                            <span className="absolute left-1/2 top-0 h-2.5 w-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-cyan-200 shadow-[0_0_22px_rgb(103_232_249)]" />
-                            <span className="absolute bottom-[9%] right-[13%] h-2 w-2 rounded-full bg-fuchsia-300 shadow-[0_0_18px_rgb(244_114_182)]" />
+                        <div className="absolute inset-x-[8%] bottom-[9%] top-[6%] bg-[linear-gradient(135deg,rgba(249,115,22,0.16),transparent_34%,rgba(34,211,238,0.08)_68%,transparent)] [clip-path:polygon(8%_8%,86%_0,100%_76%,72%_100%,0_88%)]" />
+                        <div className="absolute inset-x-[12%] bottom-[12%] top-[11%] opacity-35 [background-image:linear-gradient(rgba(249,115,22,0.18)_1px,transparent_1px),linear-gradient(90deg,rgba(249,115,22,0.18)_1px,transparent_1px)] [background-size:44px_44px] [clip-path:polygon(10%_4%,92%_12%,96%_88%,18%_98%,0_34%)]" />
+
+                        <motion.div
+                            className="absolute inset-[1%] z-10"
+                            animate={{ y: [0, -14, 0], rotate: [-1.5, 1, -1.5] }}
+                            transition={{ duration: 7.5, repeat: Infinity, ease: "easeInOut" }}
+                        >
+                            <NextImage
+                                src="/brand/ai-core-hero.png"
+                                alt="TingAi neural processing core"
+                                fill
+                                priority
+                                sizes="(max-width: 1024px) 94vw, 52vw"
+                                className="object-contain drop-shadow-[0_34px_65px_rgba(249,115,22,0.28)]"
+                            />
                         </motion.div>
-                        <motion.div className="absolute inset-[16%] rounded-full border border-dashed border-primary/25" animate={{ rotate: -360 }} transition={{ duration: 34, repeat: Infinity, ease: "linear" }} />
-                        <TechHeroScene />
 
-                        <div className="absolute left-[2%] top-[18%] flex items-center gap-2 rounded-full border border-cyan-300/20 bg-black/60 px-3 py-2 shadow-[0_12px_45px_-20px_rgb(34_211_238)] backdrop-blur-xl sm:left-[5%] sm:px-4">
-                            <span className="h-2 w-2 rounded-full bg-emerald-300 shadow-[0_0_14px_rgb(110_231_183)]" />
-                            <span className="whitespace-nowrap text-[10px] font-black uppercase text-cyan-100 sm:text-xs">12 models online</span>
-                        </div>
+                        {[12, 28, 46, 68, 84].map((left, index) => (
+                            <motion.span
+                                key={left}
+                                className="absolute z-20 h-1.5 w-1.5 bg-orange-300 shadow-[0_0_15px_rgba(251,146,60,0.95)]"
+                                style={{ left: `${left}%`, top: `${18 + (index % 3) * 24}%` }}
+                                animate={{ y: [20, -28, 20], opacity: [0.15, 1, 0.15], scale: [0.7, 1.35, 0.7] }}
+                                transition={{ duration: 3.4 + index * 0.45, repeat: Infinity, ease: "easeInOut", delay: index * 0.3 }}
+                            />
+                        ))}
 
-                        <div className="absolute bottom-[14%] right-[1%] flex items-center gap-2 rounded-full border border-fuchsia-300/20 bg-black/60 px-3 py-2 shadow-[0_12px_45px_-20px_rgb(244_114_182)] backdrop-blur-xl sm:right-[5%] sm:px-4">
-                            <BrandLogo variant="mark" className="h-7 w-7 ring-1 ring-white/10 sm:h-8 sm:w-8" />
-                            <div><div className="whitespace-nowrap text-[10px] font-black text-white sm:text-xs">Neural pulse</div><div className="whitespace-nowrap text-[9px] text-muted-foreground sm:text-[10px]">124 workflows synced</div></div>
-                        </div>
+                        <motion.div className="absolute left-[4%] top-[20%] z-30 border-l-2 border-orange-400 bg-black/70 px-4 py-3 shadow-[0_18px_50px_-24px_rgba(249,115,22,0.9)] backdrop-blur-xl" animate={{ x: [0, 8, 0] }} transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}>
+                            <span className="block font-mono text-[10px] font-black uppercase text-orange-300">Neural engine</span>
+                            <span className="mt-1 block text-xs font-bold text-white">128 workflows active</span>
+                        </motion.div>
+
+                        <motion.div className="absolute bottom-[13%] right-[2%] z-30 border-r-2 border-cyan-300 bg-black/70 px-4 py-3 text-right shadow-[0_18px_50px_-24px_rgba(34,211,238,0.8)] backdrop-blur-xl" animate={{ x: [0, -8, 0] }} transition={{ duration: 5.8, repeat: Infinity, ease: "easeInOut" }}>
+                            <span className="block font-mono text-[10px] font-black uppercase text-cyan-200">Signal integrity</span>
+                            <span className="mt-1 block text-xs font-bold text-white">99.98% synchronized</span>
+                        </motion.div>
                     </motion.div>
                 </div>
             </section>
@@ -897,7 +915,7 @@ export default function LandingPage() {
                 <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/15 to-transparent" />
                 <div className="container relative z-10 mx-auto px-4">
                     <motion.div
-                        className="text-center mb-16"
+                        className="section-heading-modern mb-16"
                         initial="hidden"
                         whileInView="visible"
                         viewport={{ once: true }}
@@ -975,9 +993,9 @@ export default function LandingPage() {
                             <div className="mt-6 rounded-2xl border border-lime-300/20 bg-lime-300/10 p-3 text-sm font-bold text-lime-100">Risk status: protected</div>
                         </motion.div>
 
-                        <motion.div variants={fadeInUp} className="tech-border-flow relative overflow-hidden rounded-[1.75rem] border border-fuchsia-300/20 bg-[#140716]/80 p-6 shadow-[0_34px_110px_-64px_rgb(217_70_239)] backdrop-blur-2xl lg:col-span-2">
-                            <div className="absolute -right-10 -top-10 h-28 w-28 rounded-full bg-fuchsia-300/20 blur-2xl" />
-                            <Rocket className="mb-5 h-9 w-9 text-fuchsia-200" />
+                        <motion.div variants={fadeInUp} className="tech-border-flow relative overflow-hidden rounded-[1.75rem] border border-orange-300/20 bg-[#140c07]/80 p-6 shadow-[0_34px_110px_-64px_rgb(249_115_22)] backdrop-blur-2xl lg:col-span-2">
+                            <div className="absolute -right-10 -top-10 h-28 w-28 rounded-full bg-orange-300/20 blur-2xl" />
+                            <Rocket className="mb-5 h-9 w-9 text-orange-200" />
                             <h3 className="text-2xl font-black">Production output</h3>
                             <p className="mt-3 leading-7 text-muted-foreground">Outputs are structured for handoff: copy, code, assets, plans and campaigns ready to use.</p>
                             <div className="mt-6 flex gap-2">
@@ -1002,18 +1020,18 @@ export default function LandingPage() {
 
                 <div className="container mx-auto px-4 relative z-10">
                     <motion.div
-                        className="text-center mb-16"
+                        className="section-heading-modern mb-16"
                         initial="hidden"
                         whileInView="visible"
                         viewport={{ once: true }}
                         variants={fadeInUp}
                     >
-                        <Badge className="mb-4 border-cyan-400/25 bg-cyan-400/10 text-cyan-200">
+                        <Badge className="mb-4 border-orange-300/25 bg-orange-400/10 text-orange-200">
                             <Megaphone className="w-3 h-3 mr-1" /> AI Marketing
                         </Badge>
                         <h2 className="mx-auto mb-5 max-w-4xl text-4xl font-black leading-tight md:text-5xl lg:text-6xl">
                             Supercharge Your{" "}
-                            <span className="bg-gradient-to-r from-blue-500 via-cyan-500 to-teal-500 bg-clip-text text-transparent">
+                            <span className="bg-gradient-to-r from-orange-300 via-orange-500 to-amber-300 bg-clip-text text-transparent">
                                 Marketing with AI
                             </span>
                         </h2>
@@ -1135,7 +1153,7 @@ export default function LandingPage() {
 
                     <div className="text-center mt-12">
                         <Link href="/social" target="_blank" rel="noopener noreferrer">
-                            <Button size="lg" className="group border border-cyan-300/20 bg-gradient-to-r from-blue-600 to-cyan-500 text-white shadow-[0_18px_60px_-24px_rgb(34_211_238)] hover:from-blue-500 hover:to-cyan-400">
+                            <Button size="lg" className="orange-cta group">
                                 Explore AI Marketing
                                 <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
                             </Button>
@@ -1155,18 +1173,18 @@ export default function LandingPage() {
 
                 <div className="container mx-auto px-4 relative z-10">
                     <motion.div
-                        className="text-center mb-16"
+                        className="section-heading-modern mb-16"
                         initial="hidden"
                         whileInView="visible"
                         viewport={{ once: true }}
                         variants={fadeInUp}
                     >
-                        <Badge className="mb-4 border-fuchsia-300/25 bg-fuchsia-400/10 text-fuchsia-200">
+                        <Badge className="mb-4 border-orange-300/25 bg-orange-400/10 text-orange-200">
                             <Music className="w-3 h-3 mr-1" /> AI Music Studio
                         </Badge>
                         <h2 className="mx-auto mb-5 max-w-4xl text-4xl font-black leading-tight md:text-5xl lg:text-6xl">
                             Create Professional{" "}
-                            <span className="bg-gradient-to-r from-purple-500 via-pink-500 to-rose-500 bg-clip-text text-transparent">
+                            <span className="bg-gradient-to-r from-orange-300 via-orange-500 to-amber-300 bg-clip-text text-transparent">
                                 Music with AI
                             </span>
                         </h2>
@@ -1183,14 +1201,14 @@ export default function LandingPage() {
                         viewport={{ once: true }}
                         transition={{ duration: 0.6 }}
                     >
-                        <div className="tech-border-flow tech-scan-surface relative overflow-hidden rounded-[2rem] border border-white/10 bg-[#090711]/85 shadow-[0_38px_120px_-55px_rgb(217_70_239)] backdrop-blur-2xl">
+                        <div className="tech-border-flow tech-scan-surface relative overflow-hidden rounded-[2rem] border border-white/10 bg-[#100b07]/85 shadow-[0_38px_120px_-55px_rgb(249_115_22)] backdrop-blur-2xl">
                             {/* Top gradient bar */}
-                            <div className="h-1.5 w-full bg-gradient-to-r from-purple-500 via-pink-500 to-rose-500 shadow-[0_0_30px_rgb(236_72_153)]" />
+                            <div className="h-1.5 w-full bg-gradient-to-r from-orange-500 via-amber-300 to-orange-600 shadow-[0_0_30px_rgb(249_115_22)]" />
 
                             <div className="p-6 md:p-8">
                                 <div className="flex items-center gap-6">
                                     {/* Album Art Placeholder */}
-                                    <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl border border-white/15 bg-gradient-to-br from-purple-600 to-pink-500 shadow-[0_18px_60px_-24px_rgb(236_72_153)] pulse-ring md:h-24 md:w-24">
+                                    <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl border border-white/15 bg-gradient-to-br from-orange-500 to-amber-400 shadow-[0_18px_60px_-24px_rgb(249_115_22)] pulse-ring md:h-24 md:w-24">
                                         <Music2 className="w-10 h-10 text-white" />
                                     </div>
 
@@ -1239,7 +1257,7 @@ export default function LandingPage() {
                                 <div className="mt-6 flex items-center justify-between border-t border-white/10 pt-4">
                                     <div className="flex items-center gap-4">
                                         <div
-                                            className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border border-white/15 bg-gradient-to-r from-purple-600 to-pink-500 shadow-lg transition-transform hover:scale-105"
+                                            className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border border-white/15 bg-gradient-to-r from-orange-500 to-amber-400 shadow-lg transition-transform hover:scale-105"
                                             onClick={() => {
                                                 if (summerVibesSong?.url) {
                                                     if (!audioRef.current) {
@@ -1322,7 +1340,7 @@ export default function LandingPage() {
 
                     <div className="text-center mt-12">
                         <Link href="/music-generator" target="_blank" rel="noopener noreferrer">
-                            <Button size="lg" className="group border border-fuchsia-300/20 bg-gradient-to-r from-purple-600 to-pink-500 text-white shadow-[0_18px_60px_-24px_rgb(236_72_153)] hover:from-purple-500 hover:to-pink-400">
+                            <Button size="lg" className="orange-cta group">
                                 <Music className="w-4 h-4 mr-2" />
                                 Start Creating Music
                                 <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
@@ -1420,12 +1438,12 @@ export default function LandingPage() {
                         </motion.div>
 
                         <motion.div variants={fadeInUp} className="space-y-5">
-                            <div className="tech-border-flow overflow-hidden rounded-[1.75rem] border border-fuchsia-300/20 bg-[#150719]/90 p-5 shadow-[0_34px_120px_-70px_rgb(217_70_239)] backdrop-blur-2xl">
-                                <p className="text-xs font-black uppercase text-fuchsia-200">Command preview</p>
+                            <div className="tech-border-flow overflow-hidden rounded-[1.75rem] border border-orange-300/20 bg-[#150c07]/90 p-5 shadow-[0_34px_120px_-70px_rgb(249_115_22)] backdrop-blur-2xl">
+                                <p className="text-xs font-black uppercase text-orange-200">Command preview</p>
                                 <div className="mt-5 rounded-2xl border border-white/10 bg-black/45 p-4 font-mono text-xs leading-6 text-slate-300">
                                     <p><span className="text-emerald-300">$</span> ting run campaign</p>
                                     <p className="text-cyan-200">routing: writer + image + social</p>
-                                    <p className="text-fuchsia-200">status: production ready</p>
+                                    <p className="text-orange-200">status: production ready</p>
                                 </div>
                             </div>
                             <div className="tech-border-flow overflow-hidden rounded-[1.75rem] border border-white/10 bg-white/[0.045] p-5 backdrop-blur-2xl">
@@ -1442,7 +1460,7 @@ export default function LandingPage() {
                                 </div>
                             </div>
                             <Link href="/dashboard" target="_blank" rel="noopener noreferrer">
-                                <Button size="lg" className="w-full">
+                                <Button size="lg" className="orange-cta w-full">
                                     Open Full Workspace
                                     <ArrowRight className="h-4 w-4" />
                                 </Button>
@@ -1491,7 +1509,7 @@ export default function LandingPage() {
             </section>
 
             {/* Pricing OS */}
-            <section id="pricing" className="relative overflow-hidden border-y border-white/10 bg-black py-28">
+            <section id="pricing" className="relative overflow-hidden border-y border-white/10 bg-black py-20 md:py-28">
                 <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,hsl(var(--primary)/0.16),transparent_42%)]" />
                 <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.035)_1px,transparent_1px)] bg-[size:9%_100%]" />
                 <div className="container relative z-10 mx-auto px-4">
@@ -1513,12 +1531,12 @@ export default function LandingPage() {
                             const displayPeriod = plan.period || (plan.price === 0 && plan.name.toLowerCase().includes('free') ? 'forever' : (plan.interval ? `/${plan.interval}` : ''));
 
                             return (
-                                <motion.div key={index} variants={fadeInUp} whileHover={{ backgroundColor: "rgba(139,92,246,0.09)" }} className={`group relative grid gap-5 border-b border-white/10 p-5 last:border-b-0 md:grid-cols-[1fr_0.8fr_1.3fr_auto] md:items-center ${plan.popular ? "bg-primary/[0.055]" : "bg-transparent"}`}>
-                                    {plan.popular && <motion.div className="absolute inset-y-0 left-0 w-1 bg-gradient-to-b from-cyan-300 via-primary to-fuchsia-400" animate={{ opacity: [0.45, 1, 0.45] }} transition={{ duration: 2.2, repeat: Infinity }} />}
+                                <motion.div key={index} variants={fadeInUp} whileHover={{ backgroundColor: "rgba(249,115,22,0.08)" }} className={`group relative grid gap-5 border-b border-white/10 p-5 last:border-b-0 md:grid-cols-[1fr_0.8fr_1.3fr_auto] md:items-center ${plan.popular ? "bg-primary/[0.055]" : "bg-transparent"}`}>
+                                    {plan.popular && <motion.div className="absolute inset-y-0 left-0 w-1 bg-gradient-to-b from-amber-300 via-primary to-orange-500" animate={{ opacity: [0.45, 1, 0.45] }} transition={{ duration: 2.2, repeat: Infinity }} />}
                                     <div className="flex items-center gap-4"><div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-black/40 font-mono text-xs font-black text-primary">0{index + 1}</div><div><div className="flex items-center gap-2"><h3 className="text-xl font-black">{plan.name}</h3>{plan.popular && <Badge className="bg-primary/15 text-primary">Popular</Badge>}</div><p className="mt-1 text-sm text-muted-foreground">{plan.description}</p></div></div>
                                     <div><span className="text-3xl font-black">{displayPrice}</span><span className="ml-1 text-sm text-muted-foreground">{displayPeriod}</span></div>
                                     <div className="flex flex-wrap gap-2">{plan.features.slice(0, 4).map((feature: string, i: number) => <span key={i} className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-xs text-slate-300"><Check className="h-3 w-3 text-emerald-300" />{feature}</span>)}</div>
-                                    <Link href="/register" target="_blank" rel="noopener noreferrer"><Button className="w-full whitespace-nowrap md:w-auto" variant={plan.popular ? "default" : "outline"}>{plan.cta || (isEnterprise ? "Contact Sales" : "Deploy plan")}<ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" /></Button></Link>
+                                    <Link href="/register" target="_blank" rel="noopener noreferrer"><Button className={`${plan.popular ? "orange-cta" : "orange-cta-secondary"} w-full whitespace-nowrap md:w-auto`} variant={plan.popular ? "default" : "outline"}>{plan.cta || (isEnterprise ? "Contact Sales" : "Deploy plan")}<ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" /></Button></Link>
                                 </motion.div>
                             );
                         })}
@@ -1527,16 +1545,16 @@ export default function LandingPage() {
             </section>
 
             {/* Launch Console */}
-            <section className="relative overflow-hidden py-28">
+            <section className="relative overflow-hidden pb-20 pt-16 md:py-28">
                 <motion.div className="absolute inset-x-[15%] bottom-0 h-80 rounded-full bg-primary/15 blur-[120px]" animate={{ scaleX: [0.75, 1.15, 0.75], opacity: [0.35, 0.7, 0.35] }} transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }} />
                 <div className="container relative z-10 mx-auto px-4">
                     <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={fadeInUp} className="tech-border-flow relative mx-auto max-w-6xl overflow-hidden rounded-[2rem] border border-white/10 bg-[#070910]/90 shadow-[0_54px_180px_-70px_hsl(var(--primary))] backdrop-blur-2xl">
                         <div className="flex items-center justify-between border-b border-white/10 bg-black/35 px-5 py-3"><div className="flex gap-2"><span className="h-2.5 w-2.5 rounded-full bg-rose-400" /><span className="h-2.5 w-2.5 rounded-full bg-amber-300" /><span className="h-2.5 w-2.5 rounded-full bg-emerald-300" /></div><span className="font-mono text-[10px] font-bold uppercase text-slate-500">ting://launch-workspace</span><span className="h-2 w-2 rounded-full bg-emerald-300 shadow-[0_0_14px_rgb(110_231_183)]" /></div>
                         <div className="grid gap-8 p-7 md:p-12 lg:grid-cols-[1.25fr_0.75fr] lg:items-center">
-                            <div><Badge className="mb-5 border-cyan-300/20 bg-cyan-300/10 text-cyan-200">Ready to launch</Badge><h2 className="text-4xl font-black leading-tight md:text-6xl">Turn the whole AI stack on.</h2><p className="mt-5 max-w-2xl text-lg leading-8 text-slate-400">Join 50,000+ creators using {settings?.metadata?.siteName || "TingAi"} to move from first idea to finished work in one connected environment.</p><div className="mt-8 flex flex-col gap-3 sm:flex-row"><Link href="/register" target="_blank" rel="noopener noreferrer"><Button size="xl" className="group w-full shadow-xl shadow-primary/25 sm:w-auto">Start free<Sparkles className="h-5 w-5 transition-transform group-hover:rotate-12 group-hover:scale-110" /></Button></Link><Link href="/dashboard" target="_blank" rel="noopener noreferrer"><Button size="xl" variant="outline" className="w-full border-white/15 bg-white/[0.04] sm:w-auto">Explore workspace<ArrowRight className="h-5 w-5" /></Button></Link></div></div>
+                            <div><Badge className="mb-5 border-orange-300/20 bg-orange-400/10 text-orange-200">Ready to launch</Badge><h2 className="text-4xl font-black leading-tight md:text-6xl">Turn the whole AI stack on.</h2><p className="mt-5 max-w-2xl text-lg leading-8 text-slate-400">Join 50,000+ creators using {settings?.metadata?.siteName || "TingAi"} to move from first idea to finished work in one connected environment.</p><div className="mt-8 flex flex-col gap-3 sm:flex-row"><Link href="/register" target="_blank" rel="noopener noreferrer"><Button size="xl" className="orange-cta group w-full sm:w-auto">Start free<Sparkles className="h-5 w-5 transition-transform group-hover:rotate-12 group-hover:scale-110" /></Button></Link><Link href="/dashboard" target="_blank" rel="noopener noreferrer"><Button size="xl" variant="outline" className="orange-cta-secondary w-full sm:w-auto">Explore workspace<ArrowRight className="h-5 w-5" /></Button></Link></div></div>
                             <div className="relative mx-auto aspect-square w-full max-w-[330px]">
                                 <motion.div className="absolute inset-[12%] rounded-full border border-primary/35" animate={{ rotate: 360 }} transition={{ duration: 18, repeat: Infinity, ease: "linear" }}><span className="absolute left-1/2 top-0 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-cyan-300 shadow-[0_0_22px_rgb(103_232_249)]" /></motion.div>
-                                <motion.div className="absolute inset-[25%] rounded-[2rem] border border-fuchsia-300/30 bg-gradient-to-br from-primary/20 to-fuchsia-400/10 shadow-2xl shadow-primary/25 backdrop-blur-xl" animate={{ rotate: [0, 8, -6, 0], y: [0, -12, 7, 0] }} transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }} />
+                                <motion.div className="absolute inset-[25%] rounded-2xl border border-orange-300/30 bg-gradient-to-br from-primary/20 to-amber-400/10 shadow-2xl shadow-primary/25 backdrop-blur-xl" animate={{ rotate: [0, 8, -6, 0], y: [0, -12, 7, 0] }} transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }} />
                                 <div className="absolute inset-0 flex items-center justify-center"><div className="flex h-24 w-24 items-center justify-center rounded-[1.75rem] border border-white/20 bg-black/60 shadow-[0_0_65px_hsl(var(--primary)/0.55)]"><Sparkles className="h-11 w-11 text-white" /></div></div>
                             </div>
                         </div>
