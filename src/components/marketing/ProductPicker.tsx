@@ -6,6 +6,7 @@ import { Package, Check, Plus, Loader2, Upload, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { toast } from "sonner";
+import { showDemoAlert } from "@/components/ui/demo-alert-dialog";
 
 interface Product {
     id: string;
@@ -46,6 +47,10 @@ export function ProductPicker({ selectedId, onSelect }: ProductPickerProps) {
     };
 
     const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (typeof window !== "undefined" && window.location.href.includes("mounikai.com")) {
+            showDemoAlert();
+            return;
+        }
         const file = e.target.files?.[0];
         if (!file) return;
 
@@ -107,7 +112,13 @@ export function ProductPicker({ selectedId, onSelect }: ProductPickerProps) {
                         size="sm" 
                         className="h-8 text-xs gap-1" 
                         disabled={uploading}
-                        onClick={() => fileInputRef.current?.click()}
+                        onClick={() => {
+                            if (typeof window !== "undefined" && window.location.href.includes("mounikai.com")) {
+                                showDemoAlert();
+                                return;
+                            }
+                            fileInputRef.current?.click();
+                        }}
                     >
                         {uploading ? <Loader2 className="w-3 h-3 animate-spin" /> : <Upload className="w-3 h-3" />}
                         Upload Product

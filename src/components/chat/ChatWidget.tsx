@@ -124,7 +124,7 @@ export default function ChatWidget({ embedded = false, supportEmail }: { embedde
                     </div>
                     <div>
                         <h3 className="font-semibold text-sm">Live Support</h3>
-                        <p className="text-[10px] opacity-80">Powered by {settings?.metadata?.siteName || "AI Suite"}</p>
+                        <p className="text-[10px] opacity-80">Powered by TingAi</p>
 
                     </div>
                 </div>

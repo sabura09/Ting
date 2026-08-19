@@ -10,6 +10,7 @@ import { LanguageProvider } from "../contexts/LanguageContext";
 import { TooltipProvider } from "./ui/tooltip";
 import { Toaster } from "./ui/toaster";
 import { Toaster as Sonner } from "./ui/sonner";
+import { DemoAlertDialog } from "./ui/demo-alert-dialog";
 
 export function Providers({ children }: { children: React.ReactNode }) {
     const [queryClient] = useState(() => new QueryClient());
@@ -19,12 +20,13 @@ export function Providers({ children }: { children: React.ReactNode }) {
             <SettingsProvider>
                 <RTLProvider>
                     <LanguageProvider>
-                        <ThemeProvider defaultTheme="dark" storageKey="ai-suite-theme">
+                        <ThemeProvider defaultTheme="light" storageKey="ai-suite-theme">
                             <AuthProvider>
                                 <TooltipProvider>
                                     {children}
                                     <Toaster />
                                     <Sonner />
+                                    <DemoAlertDialog />
                                 </TooltipProvider>
                             </AuthProvider>
                         </ThemeProvider>

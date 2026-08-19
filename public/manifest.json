@@ -1,13 +1,13 @@
 {
   "name": "TingAi",
   "short_name": "TingAi",
-  "description": "A modern AI productivity workspace.",
+  "description": "The most powerful AI productivity suite.",
   "id": "/",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
-  "background_color": "#050914",
-  "theme_color": "#050914",
+  "background_color": "#030712",
+  "theme_color": "#030712",
   "icons": [
     {
       "src": "/icons/icon-192x192.png",

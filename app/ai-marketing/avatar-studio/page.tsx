@@ -24,6 +24,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { AssetViewer } from "@/components/marketing/AssetViewer";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { toast } from "sonner";
+import { showDemoAlert } from "@/components/ui/demo-alert-dialog";
 
 export default function AvatarStudioPage() {
     const { isAuthenticated, loading: authLoading } = useAuth();
@@ -114,6 +115,10 @@ export default function AvatarStudioPage() {
     };
 
     const handleReferenceUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (typeof window !== "undefined" && window.location.href.includes("mounikai.com")) {
+            showDemoAlert();
+            return;
+        }
         const file = e.target.files?.[0];
         if (!file) return;
 
@@ -148,6 +153,10 @@ export default function AvatarStudioPage() {
     };
 
     const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (typeof window !== "undefined" && window.location.href.includes("mounikai.com")) {
+            showDemoAlert();
+            return;
+        }
         const file = e.target.files?.[0];
         if (!file) return;
 
@@ -264,7 +273,13 @@ export default function AvatarStudioPage() {
                             variant="outline" 
                             className="gap-2 rounded-xl h-12" 
                             disabled={uploading}
-                            onClick={() => fileInputRef.current?.click()}
+                            onClick={() => {
+                                if (typeof window !== "undefined" && window.location.href.includes("mounikai.com")) {
+                                    showDemoAlert();
+                                    return;
+                                }
+                                fileInputRef.current?.click();
+                            }}
                         >
                             {uploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
                             Upload Custom Avatar
@@ -320,13 +335,22 @@ export default function AvatarStudioPage() {
                                                 </button>
                                             </div>
                                         ) : (
-                                            <label className="flex flex-col items-center justify-center aspect-video rounded-xl border-2 border-dashed border-muted-foreground/20 hover:border-primary/50 hover:bg-primary/5 transition-all cursor-pointer">
+                                            <div 
+                                                onClick={() => {
+                                                    if (typeof window !== "undefined" && window.location.href.includes("mounikai.com")) {
+                                                        showDemoAlert();
+                                                        return;
+                                                    }
+                                                    document.getElementById("ref-photo-upload")?.click();
+                                                }}
+                                                className="flex flex-col items-center justify-center aspect-video rounded-xl border-2 border-dashed border-muted-foreground/20 hover:border-primary/50 hover:bg-primary/5 transition-all cursor-pointer"
+                                            >
                                                 <div className="flex flex-col items-center gap-2 text-muted-foreground">
                                                     {refUploading ? <Loader2 className="w-8 h-8 animate-spin" /> : <Upload className="w-8 h-8" />}
                                                     <span className="text-xs font-medium">Upload headshot to match face</span>
                                                 </div>
-                                                <input type="file" className="hidden" accept="image/*" onChange={handleReferenceUpload} />
-                                            </label>
+                                                <input id="ref-photo-upload" type="file" className="hidden" accept="image/*" onChange={handleReferenceUpload} />
+                                            </div>
                                         )}
                                     </div>
                                 </div>

@@ -27,30 +27,45 @@ export function Layout({ children, fullHeight = false, noPadding = false }: Layo
     }, []);
 
     return (
-        <div className="flex h-full w-full overflow-hidden bg-background text-foreground">
+        <div className="flex h-full w-full overflow-hidden bg-background">
+            {/* Ambient background effects - Refined */}
             <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
+                {/* Primary gradient - top left */}
                 <div
-                    className="absolute inset-0 opacity-80"
+                    className="absolute -top-[30%] -left-[15%] w-[50%] h-[50%] rounded-full opacity-40 dark:opacity-30"
                     style={{
-                        background:
-                            "linear-gradient(135deg, hsl(var(--background)) 0%, hsl(var(--muted) / 0.46) 45%, hsl(var(--background)) 100%)",
+                        background: 'radial-gradient(circle, hsl(var(--ai-primary) / 0.15) 0%, transparent 60%)',
+                        filter: 'blur(80px)',
                     }}
                 />
+
+                {/* Secondary gradient - bottom right */}
                 <div
-                    className="absolute inset-0 opacity-[0.045] dark:opacity-[0.055]"
+                    className="absolute -bottom-[30%] -right-[15%] w-[50%] h-[50%] rounded-full opacity-30 dark:opacity-20"
+                    style={{
+                        background: 'radial-gradient(circle, hsl(var(--ai-secondary) / 0.12) 0%, transparent 60%)',
+                        filter: 'blur(80px)',
+                    }}
+                />
+
+                {/* Accent gradient - center */}
+                <div
+                    className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[35%] h-[35%] rounded-full opacity-20 dark:opacity-15"
+                    style={{
+                        background: 'radial-gradient(circle, hsl(var(--ai-tertiary) / 0.08) 0%, transparent 60%)',
+                        filter: 'blur(60px)',
+                    }}
+                />
+
+                {/* Subtle grid pattern overlay */}
+                <div
+                    className="absolute inset-0 opacity-[0.015] dark:opacity-[0.03]"
                     style={{
                         backgroundImage: `
                             linear-gradient(to right, hsl(var(--foreground)) 1px, transparent 1px),
                             linear-gradient(to bottom, hsl(var(--foreground)) 1px, transparent 1px)
                         `,
-                        backgroundSize: "44px 44px",
-                    }}
-                />
-                <div
-                    className="absolute inset-0 opacity-60"
-                    style={{
-                        background:
-                            "linear-gradient(110deg, transparent 0%, hsl(var(--ai-primary) / 0.08) 34%, transparent 62%, hsl(var(--ai-secondary) / 0.06) 100%)",
+                        backgroundSize: '60px 60px',
                     }}
                 />
             </div>

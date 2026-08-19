@@ -30,7 +30,6 @@ import {
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
-import { useSettings } from "@/contexts/SettingsContext";
 import { TOOLS_COUNT_DISPLAY } from "@/lib/constants";
 import { RecaptchaProvider, useRecaptcha } from "@/components/auth/RecaptchaProvider";
 import TwoFactorVerify from "@/components/auth/TwoFactorVerify";
@@ -80,7 +79,6 @@ function LoginContent() {
 
     const { login } = useAuth();
     const { executeRecaptcha } = useRecaptcha();
-    const { settings } = useSettings();
     const { toast } = useToast();
     const router = useRouter();
 
@@ -192,11 +190,6 @@ function LoginContent() {
         }
     };
 
-    const quickLogin = (userEmail: string, userPassword: string) => {
-        form.setValue("email", userEmail);
-        form.setValue("password", userPassword);
-    };
-
     return (
         <div className="min-h-screen flex">
             {/* Left Side - Branding */}
@@ -245,7 +238,7 @@ function LoginContent() {
                     </div>
 
                     <p className="text-sm text-white/60">
-                        © 2026 {settings?.metadata?.siteName || "TingAi"}. All rights reserved.
+                        © 2026 TingAi. All rights reserved.
                     </p>
                 </div>
 
@@ -460,31 +453,6 @@ function LoginContent() {
                                         </Button>
                                     </form>
                                 </Form>
-
-                                {/* Demo Accounts */}
-                                <div className="mt-8 pt-6 border-t border-border">
-                                    <p className="text-sm font-medium text-muted-foreground mb-4 text-center">
-                                        Quick demo login
-                                    </p>
-                                    <div className="grid grid-cols-2 gap-3">
-                                        <Button
-                                            variant="outline"
-                                            size="sm"
-                                            onClick={() => quickLogin("admin@example.com", "admin123")}
-                                            className="w-full"
-                                        >
-                                            Admin Demo
-                                        </Button>
-                                        <Button
-                                            variant="outline"
-                                            size="sm"
-                                            onClick={() => quickLogin("user@demo.com", "user123")}
-                                            className="w-full"
-                                        >
-                                            User Demo
-                                        </Button>
-                                    </div>
-                                </div>
 
                                 <p className="text-center text-sm text-muted-foreground mt-6">
                                     Don't have an account?{" "}

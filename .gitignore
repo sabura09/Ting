@@ -27,6 +27,17 @@ dist-ssr
 
 .vercel
 
-.vercel
-
-.vercel
+# Mobile (Expo / React Native)
+mobile/node_modules/
+mobile/android/
+mobile/ios/
+mobile/.expo/
+mobile/.expo-shared/
+mobile/dist/
+mobile/web-build/
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.orig.*

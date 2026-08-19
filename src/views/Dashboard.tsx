@@ -495,7 +495,7 @@ export default function Dashboard() {
                     </div>
                     <div className="relative w-full sm:w-72 group">
                         <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-primary/10 to-transparent rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl" />
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground z-20 pointer-events-none" />
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-black font-bold z-20 pointer-events-none" />
                         <Input
                             placeholder="Search tools..."
                             className="pl-10 h-11 bg-background border-2 border-primary/20 shadow-sm shadow-primary/5 focus:bg-background focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all duration-300 rounded-xl font-medium relative z-10"

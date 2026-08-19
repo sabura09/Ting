@@ -126,6 +126,18 @@ async function truncateAllTables() {
     // voice_agent_config (child of users)
     await supabaseAdmin.from('voice_agent_config').delete().neq('id', '00000000-0000-0000-0000-000000000000');
 
+    // instagram_comments_logs (child of users via user_email)
+    await supabaseAdmin.from('instagram_comments_logs').delete().neq('id', '00000000-0000-0000-0000-000000000000');
+
+    // instagram_dm_logs (child of users via user_email)
+    await supabaseAdmin.from('instagram_dm_logs').delete().neq('id', '00000000-0000-0000-0000-000000000000');
+
+    // instagram_posts (child of users via user_email)
+    await supabaseAdmin.from('instagram_posts').delete().neq('id', '00000000-0000-0000-0000-000000000000');
+
+    // instagram_agents (child of users via user_email)
+    await supabaseAdmin.from('instagram_agents').delete().neq('id', '00000000-0000-0000-0000-000000000000');
+
     // whatsapp_logs (child of users via user_email)
     await supabaseAdmin.from('whatsapp_logs').delete().neq('id', '00000000-0000-0000-0000-000000000000');
 
@@ -7986,6 +7998,163 @@ async function seedWhatsAppData() {
     };
 }
 
+async function seedInstagramData() {
+    const agents = [
+        {
+            user_email: 'admin@example.com',
+            is_active: true,
+            instagram_business_account_id: '17841400000000001',
+            page_access_token: 'EAAGxxxxxxxxxx_mock_token_admin',
+            username: 'aisuite_official',
+            system_prompt: 'You are a professional, helpful support assistant for AI Suite.',
+            model_id: 'gemini-2.5-flash',
+            tone: 'friendly',
+            personality: 'professional',
+            dm_reply_behavior: 'auto',
+            comment_reply_behavior: 'auto',
+            response_delay: 0,
+            created_at: daysAgo(10),
+            updated_at: daysAgo(10)
+        },
+        {
+            user_email: 'user@demo.com',
+            is_active: true,
+            instagram_business_account_id: '17841400000000002',
+            page_access_token: 'EAAGxxxxxxxxxx_mock_token_demo',
+            username: 'demo_creator',
+            system_prompt: 'You are a helpful and friendly AI assistant for Instagram.',
+            model_id: 'gemini-2.5-flash',
+            tone: 'friendly',
+            personality: 'professional',
+            dm_reply_behavior: 'auto',
+            comment_reply_behavior: 'auto',
+            response_delay: 0,
+            created_at: daysAgo(10),
+            updated_at: daysAgo(10)
+        }
+    ];
+
+    const { error: agentError } = await supabaseAdmin.from('instagram_agents').upsert(agents, { onConflict: 'user_email' });
+    if (agentError) throw new Error(`Seed instagram_agents failed: ${agentError.message}`);
+
+    const targetEmails = ['admin@example.com', 'user@demo.com'];
+    const postsToInsert: any[] = [];
+    const dmLogsToInsert: any[] = [];
+    const commentsLogsToInsert: any[] = [];
+
+    const mockPostId1 = '18023456789012345';
+
+    targetEmails.forEach((email) => {
+        // Seed Scheduled Posts
+        postsToInsert.push(
+            {
+                user_email: email,
+                media_url: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=600',
+                caption: 'Launching our brand new AI Marketing Studio today! 🚀 Create video reels, flyers, and logos in seconds. #AI #Marketing #SaaS',
+                scheduled_at: daysAgo(1),
+                published_at: daysAgo(1),
+                status: 'published',
+                created_at: daysAgo(2)
+            },
+            {
+                user_email: email,
+                media_url: 'https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?q=80&w=600',
+                caption: 'Automation is the key to scaling your business. See how AI Voice agent handles customer calls 24/7. 📞 #Business #Automation',
+                scheduled_at: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toISOString(),
+                status: 'scheduled',
+                created_at: daysAgo(0)
+            },
+            {
+                user_email: email,
+                media_url: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=600',
+                caption: 'Weekly Analytics Update! 📊 Check out your token usage patterns inside the Dashboard.',
+                scheduled_at: daysAgo(3),
+                status: 'failed',
+                error_message: 'Invalid Media URL format (size too large or unsupported format)',
+                created_at: daysAgo(4)
+            }
+        );
+
+        // Seed DM Logs
+        dmLogsToInsert.push(
+            {
+                user_email: email,
+                sender_id: 'instagram_user_john',
+                sender_username: 'john_design',
+                message_text: 'Hey! Is the Website Builder included in the Starter plan, or do I need Pro?',
+                reply_text: 'Hi John! The Website Builder is part of our Pro plan ($29/mo), which also includes AI Agents and RAG Document searches. The Starter plan covers basic chat, content writer, and image/code generator tools.',
+                tokens_consumed: 15,
+                status: 'success',
+                created_at: daysAgo(3)
+            },
+            {
+                user_email: email,
+                sender_id: 'instagram_user_john',
+                sender_username: 'john_design',
+                message_text: 'Got it. Can I connect my custom domain to the website I build?',
+                reply_text: 'Yes, absolutely! On the Pro and Enterprise plans, you can map your own custom domain directly to your AI-generated website. It serves instantly.',
+                tokens_consumed: 14,
+                status: 'success',
+                created_at: new Date(new Date(daysAgo(3)).getTime() + 10 * 60 * 1000).toISOString()
+            },
+            {
+                user_email: email,
+                sender_id: 'instagram_user_lucy',
+                sender_username: 'lucy_bakes',
+                message_text: 'Hi, I need help with resetting my password. I did not get the OTP email.',
+                reply_text: 'Hello Lucy! I apologize for the delay. Please check your spam folder first. If it is still missing, let me know your account email so Alex from our support team can verify your email and assist you manually.',
+                tokens_consumed: 18,
+                status: 'success',
+                created_at: daysAgo(1)
+            }
+        );
+
+        // Seed Comment Logs
+        commentsLogsToInsert.push(
+            {
+                user_email: email,
+                post_id: mockPostId1,
+                post_caption: 'Launching our brand new AI Marketing Studio today! 🚀',
+                comment_id: 'comment_111',
+                commenter_username: 'sam_tech',
+                comment_text: 'This is a game changer! Does it support Kling AI for video generation?',
+                reply_text: 'Thanks Sam! Yes, it does! The Video Generator utilizes both Kling AI and Grok-Imagine models to produce high-quality cinematic reels. Try it out!',
+                tokens_consumed: 16,
+                status: 'success',
+                created_at: daysAgo(1)
+            },
+            {
+                user_email: email,
+                post_id: mockPostId1,
+                post_caption: 'Launching our brand new AI Marketing Studio today! 🚀',
+                comment_id: 'comment_222',
+                commenter_username: 'anna_marketer',
+                comment_text: 'Is there a free trial for the marketing studio?',
+                reply_text: 'Hi Anna! Yes, our Free tier provides 500 complimentary tokens per month, which you can use to test out the Marketing Studio tools and other features!',
+                tokens_consumed: 14,
+                status: 'success',
+                created_at: new Date(new Date(daysAgo(1)).getTime() + 2 * 60 * 60 * 1000).toISOString()
+            }
+        );
+    });
+
+    const { error: postsError } = await supabaseAdmin.from('instagram_posts').insert(postsToInsert);
+    if (postsError) throw new Error(`Seed instagram_posts failed: ${postsError.message}`);
+
+    const { error: dmError } = await supabaseAdmin.from('instagram_dm_logs').insert(dmLogsToInsert);
+    if (dmError) throw new Error(`Seed instagram_dm_logs failed: ${dmError.message}`);
+
+    const { error: commentError } = await supabaseAdmin.from('instagram_comments_logs').insert(commentsLogsToInsert);
+    if (commentError) throw new Error(`Seed instagram_comments_logs failed: ${commentError.message}`);
+
+    return {
+        agents: agents.length,
+        posts: postsToInsert.length,
+        dms: dmLogsToInsert.length,
+        comments: commentsLogsToInsert.length
+    };
+}
+
 
 // ============================================================================
 // MAIN GET HANDLER
@@ -8021,6 +8190,7 @@ export async function GET(request: Request) {
         const voiceCallsResult = await seedVoiceCalls();       // voice agents call logs
         const notificationsResult = await seedNotifications(); // notifications and conversation threads
         const whatsappResult = await seedWhatsAppData();       // whatsapp agent and logs
+        const instagramResult = await seedInstagramData();     // instagram agent, posts and logs
         await seedLanguagesAndTranslations();                  // languages + translations (large, runs last)
 
         const elapsed = Date.now() - startTime;
@@ -8059,6 +8229,10 @@ export async function GET(request: Request) {
                 notification_messages: notificationsResult.messages,
                 whatsapp_agents: whatsappResult.agents,
                 whatsapp_logs: whatsappResult.logs,
+                instagram_agents: instagramResult.agents,
+                instagram_posts: instagramResult.posts,
+                instagram_dm_logs: instagramResult.dms,
+                instagram_comments_logs: instagramResult.comments,
             },
         });
     } catch (error: any) {

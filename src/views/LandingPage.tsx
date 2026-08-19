@@ -2,8 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-import NextImage from "next/image";
-import { motion, useScroll, useTransform, AnimatePresence, type Variants } from "framer-motion";
+import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { Badge } from "@/components/ui/badge";
@@ -55,10 +54,14 @@ import {
     MousePointerClick,
     Volume2,
     Pause,
-    Tag,
     type LucideIcon,
+    ChevronRight,
+    Smartphone,
+    RefreshCw,
+    Fingerprint,
+    Bell,
+    CheckCircle,
 } from "lucide-react";
-import VideoModal from "@/components/VideoModal";
 import ChatWidget from "@/components/chat/ChatWidget";
 import { useSettings } from "@/contexts/SettingsContext";
 import { TOOLS_COUNT_DISPLAY } from "@/lib/constants";
@@ -80,23 +83,22 @@ interface Feature {
 
 
 // Animation variants
-const fadeInUp: Variants = {
-    hidden: { opacity: 0, y: 18 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: "easeOut" } },
+const fadeInUp = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
 };
 
-const staggerContainer: Variants = {
+const staggerContainer = {
     hidden: { opacity: 0 },
     visible: {
         opacity: 1,
-        transition: { staggerChildren: 0.035, delayChildren: 0.02 },
+        transition: { staggerChildren: 0.1, delayChildren: 0.2 },
     },
 };
 
 export default function LandingPage() {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
-    const [isVideoOpen, setIsVideoOpen] = useState(false);
     const [showCustomBubble, setShowCustomBubble] = useState(false);
     const [isBubbleMinimized, setIsBubbleMinimized] = useState(false);
     const { settings } = useSettings();
@@ -285,7 +287,7 @@ export default function LandingPage() {
         {
             icon: Palette,
             title: "Genre Mixing",
-            description: "Blend multiple genres seamlessly - from lo-fi jazz to cinematic synthwave and beyond.",
+            description: "Blend multiple genres seamlessly — from lo-fi jazz to cinematic synthwave and beyond.",
             color: "from-cyan-500 to-blue-500",
         },
         {
@@ -303,7 +305,7 @@ export default function LandingPage() {
         {
             icon: Headphones,
             title: "48kHz Stereo Export",
-            description: "Download your tracks in high-quality 48kHz stereo - ready for streaming and production.",
+            description: "Download your tracks in high-quality 48kHz stereo — ready for streaming and production.",
             color: "from-rose-500 to-red-500",
         },
     ];
@@ -317,7 +319,7 @@ export default function LandingPage() {
 
     const testimonials = [
         {
-            quote: `${settings?.metadata?.siteName || "TingAi"} has completely transformed how I create content. What used to take hours now takes minutes.`,
+            quote: `TingAi has completely transformed how I create content. What used to take hours now takes minutes.`,
 
             author: "Sarah Chen",
             role: "Content Marketing Manager",
@@ -394,7 +396,6 @@ export default function LandingPage() {
     const [currentTime, setCurrentTime] = useState(0);
     const [duration, setDuration] = useState(0);
     const audioRef = useRef<HTMLAudioElement | null>(null);
-    const pageRef = useRef<HTMLDivElement>(null);
 
     const formatTime = (time: number) => {
         if (isNaN(time)) return "0:00";
@@ -403,7 +404,7 @@ export default function LandingPage() {
         return `${minutes}:${seconds.toString().padStart(2, "0")}`;
     };
 
-    const { scrollY, scrollYProgress } = useScroll({ container: pageRef });
+    const { scrollY } = useScroll();
     const heroOpacity = useTransform(scrollY, [0, 300], [1, 0]);
     const heroScale = useTransform(scrollY, [0, 300], [1, 0.95]);
 
@@ -452,7 +453,7 @@ export default function LandingPage() {
     }, []);
 
     useEffect(() => {
-        const scrollContainer = pageRef.current;
+        const scrollContainer = document.getElementById("main-scroll-container");
         const handleScroll = () => {
             const scrollTop = scrollContainer ? scrollContainer.scrollTop : window.scrollY;
             setScrolled(scrollTop > 20);
@@ -463,29 +464,28 @@ export default function LandingPage() {
     }, []);
 
     return (
-        <div ref={pageRef} className="ting-landing-orange dark h-screen overflow-x-hidden overflow-y-auto bg-[#050505] text-slate-100">
-            <motion.div
-                className="fixed inset-x-0 top-0 z-[70] h-[2px] origin-left bg-gradient-to-r from-orange-300 via-primary to-amber-300 shadow-[0_0_18px_hsl(var(--primary))]"
-                style={{ scaleX: scrollYProgress }}
-            />
+        <div className="min-h-screen bg-background text-foreground overflow-x-hidden">
             {/* Animated Background */}
             <div className="fixed inset-0 -z-10">
                 {/* Grid pattern */}
-                <div className="absolute inset-0 bg-[linear-gradient(to_right,hsl(var(--border)/0.24)_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--border)/0.24)_1px,transparent_1px)] bg-[size:52px_52px]" />
-                <div className="absolute inset-0 bg-[linear-gradient(115deg,transparent_0%,hsl(var(--primary)/0.09)_34%,transparent_56%,hsl(var(--ai-secondary)/0.08)_100%)]" />
-                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,hsl(var(--foreground)/0.08),transparent_42%)] dark:bg-[radial-gradient(ellipse_at_top,hsl(var(--foreground)/0.055),transparent_44%)]" />
-                <motion.div className="absolute -left-48 top-[14%] h-[30rem] w-[30rem] rounded-full bg-cyan-400/[0.08] blur-[110px]" animate={{ x: [0, 150, 25, 0], y: [0, 90, 180, 0], scale: [1, 1.16, 0.94, 1] }} transition={{ duration: 24, repeat: Infinity, ease: "easeInOut" }} />
-                <motion.div className="absolute -right-56 top-[38%] h-[34rem] w-[34rem] rounded-full bg-orange-500/[0.08] blur-[120px]" animate={{ x: [0, -130, -35, 0], y: [0, 160, -60, 0], scale: [0.9, 1.08, 1.2, 0.9] }} transition={{ duration: 29, repeat: Infinity, ease: "easeInOut" }} />
+                <div className="absolute inset-0 bg-[linear-gradient(to_right,hsl(var(--border)/0.3)_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--border)/0.3)_1px,transparent_1px)] bg-[size:60px_60px]" />
+
+                {/* Gradient orbs */}
+                <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-gradient-radial from-primary/20 to-transparent blur-3xl opacity-50" />
+                <div className="absolute top-1/3 right-0 w-[400px] h-[400px] bg-gradient-radial from-ai-secondary/15 to-transparent blur-3xl opacity-50" />
+                <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-gradient-radial from-ai-tertiary/10 to-transparent blur-3xl opacity-40" />
             </div>
 
             {/* Header */}
             <motion.header
-                className={`fixed left-0 right-0 z-50 transition-all duration-300 backdrop-blur-2xl ${scrolled
-                    ? "border-b border-white/10 bg-black/75 py-3 shadow-2xl shadow-black/30"
-                    : "border-b border-white/5 bg-black/35 py-5"
+                className={`fixed left-0 right-0 z-50 transition-all duration-300 backdrop-blur-xl ${scrolled
+                    ? "bg-background/80 border-b border-border/50 py-3"
+                    : "bg-background/60 py-5"
                     }`}
                 style={{ top: "var(--banner-height, 0px)" }}
-                initial={false}
+                initial={{ y: -100 }}
+                animate={{ y: 0 }}
+                transition={{ duration: 0.5 }}
             >
                 <div className="container mx-auto px-4 flex items-center justify-between">
                     <Link href="/" className="flex items-center gap-2.5 group">
@@ -493,35 +493,33 @@ export default function LandingPage() {
                     </Link>
 
                     {/* Desktop Navigation */}
-                    <nav className="hidden items-center gap-7 md:flex">
-                        <a href="#features" className="text-sm font-semibold text-muted-foreground transition-colors hover:text-foreground">
+                    <nav className="hidden md:flex items-center gap-8">
+                        <a href="#features" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
                             Features
                         </a>
-                        <a href="#ai-marketing" className="text-sm font-semibold text-muted-foreground transition-colors hover:text-foreground">
+                        <a href="#ai-marketing" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
                             AI Marketing
                         </a>
-                        <a href="#music-generation" className="text-sm font-semibold text-muted-foreground transition-colors hover:text-foreground">
+                        <a href="#music-generation" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
                             Music
                         </a>
-                        <a href="#tools" className="text-sm font-semibold text-muted-foreground transition-colors hover:text-foreground">
+                        <a href="#tools" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
                             Tools
                         </a>
-                        <a href="#pricing" className="text-sm font-semibold text-muted-foreground transition-colors hover:text-foreground">
+                        <a href="#mobile-app" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+                            Mobile App
+                        </a>
+                        <a href="#pricing" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
                             Pricing
                         </a>
-                        <div className="h-4 w-px bg-white/10" />
+                        <div className="h-4 w-px bg-border" />
                         <ThemeToggle />
                         <div className="flex items-center gap-3">
-                            {settings?.showDemoMode !== false && (
-                                <Link href="https://mounikai.com/product/a9921866-35a4-41d0-a137-23483d06e0b7" target="_blank" rel="noopener noreferrer" className="text-sm font-bold text-orange-300 transition-colors hover:text-orange-200">
-                                    Lifetime access
-                                </Link>
-                            )}
                             <Link href="/login" target="_blank" rel="noopener noreferrer">
-                                <Button variant="ghost" size="sm" className="hover:bg-white/10">Log in</Button>
+                                <Button variant="ghost" size="sm">Log in</Button>
                             </Link>
                             <Link href="/register" target="_blank" rel="noopener noreferrer">
-                                <Button size="sm" className="orange-header-cta">Get Started Free</Button>
+                                <Button size="sm">Get Started Free</Button>
                             </Link>
                         </div>
                     </nav>
@@ -546,7 +544,7 @@ export default function LandingPage() {
                             initial={{ opacity: 0, height: 0 }}
                             animate={{ opacity: 1, height: "auto" }}
                             exit={{ opacity: 0, height: 0 }}
-                            className="overflow-hidden border-b border-white/10 bg-black/90 backdrop-blur-2xl md:hidden"
+                            className="md:hidden border-b border-border/50 bg-background/95 backdrop-blur-xl overflow-hidden"
                         >
                             <nav className="container mx-auto px-4 py-6 space-y-4 flex flex-col">
                                 <a href="#features" onClick={() => setIsMobileMenuOpen(false)} className="text-foreground hover:text-primary">
@@ -561,15 +559,13 @@ export default function LandingPage() {
                                 <a href="#tools" onClick={() => setIsMobileMenuOpen(false)} className="text-foreground hover:text-primary">
                                     Tools
                                 </a>
+                                <a href="#mobile-app" onClick={() => setIsMobileMenuOpen(false)} className="text-foreground hover:text-primary">
+                                    Mobile App
+                                </a>
                                 <a href="#pricing" onClick={() => setIsMobileMenuOpen(false)} className="text-foreground hover:text-primary">
                                     Pricing
                                 </a>
                                 <hr className="border-border/50" />
-                                {settings?.showDemoMode !== false && (
-                                    <Link href="https://mounikai.com/product/a9921866-35a4-41d0-a137-23483d06e0b7" target="_blank" rel="noopener noreferrer" onClick={() => setIsMobileMenuOpen(false)}>
-                                        <Button className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white border-0">Buy Now</Button>
-                                    </Link>
-                                )}
                                 <Link href="/login" target="_blank" rel="noopener noreferrer" onClick={() => setIsMobileMenuOpen(false)}>
                                     <Button variant="outline" className="w-full">Log in</Button>
                                 </Link>
@@ -583,110 +579,30 @@ export default function LandingPage() {
             </motion.header>
 
             {/* Hero Section */}
-            <section className="relative min-h-[calc(100dvh-var(--banner-height,0px))] overflow-hidden pt-28 lg:pt-32">
-                <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/60 to-transparent" />
-                <div className="absolute inset-0 bg-[linear-gradient(120deg,#03040a_0%,transparent_38%,hsl(var(--primary)/0.08)_100%)]" />
-                <div className="container relative z-10 mx-auto grid min-h-[calc(100dvh-7rem)] grid-cols-1 items-center gap-10 px-4 pb-16 lg:grid-cols-[0.92fr_1.08fr] lg:gap-12">
-                    <motion.div
-                        className="mx-auto max-w-2xl text-center lg:mx-0 lg:text-left"
-                        initial={false}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.55 }}
-                    >
-                        <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-primary/25 bg-primary/10 px-3 py-1.5 text-xs font-bold uppercase text-primary shadow-[0_0_24px_hsl(var(--primary)/0.16)]">
-                            <span className="h-1.5 w-1.5 rounded-full bg-ai-secondary shadow-[0_0_12px_hsl(var(--ai-secondary))]" />
-                            TingAi Intelligence OS
-                        </div>
-
-                        <h1 className="text-balance text-5xl font-black leading-[0.95] tracking-tight text-foreground sm:text-6xl lg:text-7xl xl:text-8xl">
-                            One <span className="text-orange-400">AI operating system</span> for serious work.
-                        </h1>
-
-                        <p className="mt-6 max-w-xl text-base leading-8 text-muted-foreground sm:text-lg lg:text-xl">
-                            Move from prompt to production with writing, code, media, research and automation running inside one focused workspace.
-                        </p>
-
-                        <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center lg:justify-start">
-                            <Link href="/login" target="_blank" rel="noopener noreferrer">
-                                <Button size="xl" className="orange-cta w-full sm:w-auto">
-                                    Start building free
-                                    <ArrowRight className="h-5 w-5" />
-                                </Button>
-                            </Link>
-                            <Link href="#tools">
-                                <Button size="xl" variant="outline" className="orange-cta-secondary w-full sm:w-auto">
-                                    Explore the platform
-                                </Button>
-                            </Link>
-                        </div>
-
-                        <div className="tech-border-flow mt-10 grid grid-cols-3 overflow-hidden rounded-2xl border border-border/70 bg-card/[0.58] text-left shadow-2xl shadow-black/20 backdrop-blur-2xl">
-                            {[
-                                { value: TOOLS_COUNT_DISPLAY, label: "AI tools" },
-                                { value: "3D", label: "interface" },
-                                { value: "24/7", label: "workspace" },
-                            ].map((item) => (
-                                <div key={item.label} className="border-r border-border/60 p-4 last:border-r-0 sm:p-5">
-                                    <div className="text-2xl font-black text-foreground sm:text-3xl">{item.value}</div>
-                                    <div className="mt-1 text-xs font-medium uppercase text-muted-foreground">{item.label}</div>
-                                </div>
-                            ))}
-                        </div>
-                    </motion.div>
-
-                    <motion.div
-                        className="relative mx-auto min-h-[480px] w-full max-w-[720px] lg:min-h-[680px]"
-                        initial={false}
-                        animate={{ opacity: 1, scale: 1, y: 0 }}
-                        transition={{ duration: 0.7, delay: 0.12 }}
-                    >
-                        <div className="absolute inset-x-[8%] bottom-[9%] top-[6%] bg-[linear-gradient(135deg,rgba(249,115,22,0.16),transparent_34%,rgba(34,211,238,0.08)_68%,transparent)] [clip-path:polygon(8%_8%,86%_0,100%_76%,72%_100%,0_88%)]" />
-                        <div className="absolute inset-x-[12%] bottom-[12%] top-[11%] opacity-35 [background-image:linear-gradient(rgba(249,115,22,0.18)_1px,transparent_1px),linear-gradient(90deg,rgba(249,115,22,0.18)_1px,transparent_1px)] [background-size:44px_44px] [clip-path:polygon(10%_4%,92%_12%,96%_88%,18%_98%,0_34%)]" />
-
-                        <motion.div
-                            className="absolute inset-[1%] z-10"
-                            animate={{ y: [0, -14, 0], rotate: [-1.5, 1, -1.5] }}
-                            transition={{ duration: 7.5, repeat: Infinity, ease: "easeInOut" }}
-                        >
-                            <NextImage
-                                src="/brand/ai-core-hero.png"
-                                alt="TingAi neural processing core"
-                                fill
-                                priority
-                                sizes="(max-width: 1024px) 94vw, 52vw"
-                                className="object-contain drop-shadow-[0_34px_65px_rgba(249,115,22,0.28)]"
-                            />
-                        </motion.div>
-
-                        {[12, 28, 46, 68, 84].map((left, index) => (
-                            <motion.span
-                                key={left}
-                                className="absolute z-20 h-1.5 w-1.5 bg-orange-300 shadow-[0_0_15px_rgba(251,146,60,0.95)]"
-                                style={{ left: `${left}%`, top: `${18 + (index % 3) * 24}%` }}
-                                animate={{ y: [20, -28, 20], opacity: [0.15, 1, 0.15], scale: [0.7, 1.35, 0.7] }}
-                                transition={{ duration: 3.4 + index * 0.45, repeat: Infinity, ease: "easeInOut", delay: index * 0.3 }}
-                            />
-                        ))}
-
-                        <motion.div className="absolute left-[4%] top-[20%] z-30 border-l-2 border-orange-400 bg-black/70 px-4 py-3 shadow-[0_18px_50px_-24px_rgba(249,115,22,0.9)] backdrop-blur-xl" animate={{ x: [0, 8, 0] }} transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}>
-                            <span className="block font-mono text-[10px] font-black uppercase text-orange-300">Neural engine</span>
-                            <span className="mt-1 block text-xs font-bold text-white">128 workflows active</span>
-                        </motion.div>
-
-                        <motion.div className="absolute bottom-[13%] right-[2%] z-30 border-r-2 border-cyan-300 bg-black/70 px-4 py-3 text-right shadow-[0_18px_50px_-24px_rgba(34,211,238,0.8)] backdrop-blur-xl" animate={{ x: [0, -8, 0] }} transition={{ duration: 5.8, repeat: Infinity, ease: "easeInOut" }}>
-                            <span className="block font-mono text-[10px] font-black uppercase text-cyan-200">Signal integrity</span>
-                            <span className="mt-1 block text-xs font-bold text-white">99.98% synchronized</span>
-                        </motion.div>
-                    </motion.div>
-                </div>
-            </section>
-
-            {/* Legacy Hero Section */}
-            <section className="hidden">
+            <section className="relative pt-32 pb-20 lg:pt-40 lg:pb-32 overflow-hidden">
                 <motion.div
                     style={{ opacity: heroOpacity, scale: heroScale }}
                     className="container mx-auto px-4 text-center relative z-10"
                 >
+
+                {/* Announcement Badge */}
+                    <a href="#mobile-app" className="inline-block">
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.5 }}
+                            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 hover:bg-primary/15 transition-colors mb-8 cursor-pointer"
+                        >
+                            <span className="relative flex h-2 w-2">
+                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75" />
+                                <span className="relative inline-flex rounded-full h-2 w-2 bg-primary" />
+                            </span>
+                            <span className="text-sm font-medium text-primary">
+                                New: Native Mobile App, AI Music Studio & Marketing Suite are live!
+                            </span>
+                            <ChevronRight className="w-4 h-4 text-primary" />
+                        </motion.div>
+                    </a>
 
                     {/* Main Heading */}
                     <motion.h1
@@ -695,10 +611,8 @@ export default function LandingPage() {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5, delay: 0.1 }}
                     >
-                        <span className="text-foreground">The Ultimate</span>
-                        <br />
                         <span className="gradient-text bg-gradient-to-r from-primary via-ai-secondary to-ai-tertiary bg-clip-text text-transparent">
-                            AI Productivity Suite
+                            The All-In-One AI Software Toolkit
                         </span>
                     </motion.h1>
 
@@ -709,8 +623,8 @@ export default function LandingPage() {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5, delay: 0.2 }}
                     >
-                        Access {TOOLS_COUNT_DISPLAY} powerful AI tools. Generate content, code, images, websites,
-                        and more with cutting-edge AI technology.
+                        Deploy 120+ premium smart tools instantly. Build high-converting copy, clean code, stunning
+                        imagery, and responsive websites via next-level technology.
                     </motion.p>
 
                     {/* CTA Buttons */}
@@ -720,91 +634,12 @@ export default function LandingPage() {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5, delay: 0.3 }}
                     >
-                        <Link href="/login" target="_blank" rel="noopener noreferrer">
+                        <Link href="/register">
                             <Button size="xl" className="group">
-                                Live Demo
+                                Try for free
                                 <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
                             </Button>
                         </Link>
-                        {settings?.showDemoMode !== false && (
-                            <Button
-                                size="xl"
-                                variant="outline"
-                                onClick={() => setIsVideoOpen(true)}
-                                className="group"
-                            >
-                                <Play className="w-5 h-5 mr-2 group-hover:scale-110 transition-transform" />
-                                Watch Demo
-                            </Button>
-                        )}
-                        {settings?.showDemoMode !== false && (
-                            <Link
-                                href="https://mounikai.com/product/a9921866-35a4-41d0-a137-23483d06e0b7"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="relative group inline-flex items-center justify-center select-none"
-                            >
-                                {/* Intense Glowing Aura behind the button */}
-                                <div className="absolute -inset-2 rounded-full bg-gradient-to-r from-red-600 via-orange-500 to-amber-400 opacity-90 blur-lg group-hover:opacity-100 group-hover:scale-105 transition-all duration-300 animate-pulse" />
-
-                                {/* Festive Burst Rays */}
-                                <div className="absolute -top-2.5 -left-2 z-30 pointer-events-none flex gap-0.5">
-                                    <span className="w-1 h-2.5 bg-amber-400 rounded-full rotate-[-45deg] animate-pulse" />
-                                    <span className="w-1 h-2 bg-red-500 rounded-full rotate-[-20deg]" />
-                                    <span className="w-1 h-2 bg-orange-400 rounded-full rotate-[10deg]" />
-                                </div>
-                                <div className="absolute -top-2.5 -right-2 z-30 pointer-events-none flex gap-0.5">
-                                    <span className="w-1 h-2 bg-orange-400 rounded-full rotate-[-10deg]" />
-                                    <span className="w-1 h-2 bg-red-500 rounded-full rotate-[20deg]" />
-                                    <span className="w-1 h-2.5 bg-amber-400 rounded-full rotate-[45deg] animate-pulse" />
-                                </div>
-
-                                {/* Top Ribbon Tab: SPECIAL OFFER */}
-                                <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 z-30 pointer-events-none">
-                                    <div className="px-2.5 py-[2px] rounded-t-md bg-gradient-to-b from-rose-500 via-red-600 to-rose-700 border-t border-x border-amber-300/80 shadow-[0_-2px_4px_rgba(225,29,72,0.6)] flex items-center gap-1 text-white font-black text-[8px] md:text-[9px] tracking-wider uppercase whitespace-nowrap leading-none drop-shadow-[0_1px_1px_rgba(0,0,0,0.8)]">
-                                        <Star className="w-2.5 h-2.5 text-yellow-300 fill-yellow-300 animate-spin-slow shrink-0" />
-                                        SPECIAL OFFER
-                                    </div>
-                                </div>
-
-                                {/* Outer Golden Metallic Pill Frame */}
-                                <div className="relative z-20 p-[2px] rounded-full bg-gradient-to-b from-amber-200 via-amber-400 to-amber-700 shadow-[0_6px_18px_rgba(225,29,72,0.5),0_0_12px_rgba(251,191,36,0.5)] group-hover:scale-[1.03] active:scale-[0.98] transition-transform duration-300">
-                                    {/* Inner Vibrant Pill Body */}
-                                    <div className="relative flex items-center gap-2.5 md:gap-3 rounded-full px-4 py-2 h-[52px] bg-gradient-to-r from-amber-500 via-orange-500 to-red-600 border border-amber-300/60 overflow-hidden shadow-[inset_0_2px_3px_rgba(255,255,255,0.7),inset_0_-3px_6px_rgba(0,0,0,0.5)]">
-                                        {/* Glossy Top Reflection */}
-                                        <div className="absolute top-0 inset-x-0 h-1/2 bg-gradient-to-b from-white/35 to-transparent rounded-t-full pointer-events-none" />
-
-                                        {/* Corner Specular Highlights */}
-                                        <div className="absolute top-1 left-6 w-1.5 h-1.5 rounded-full bg-white/80 blur-[0.5px]" />
-                                        <div className="absolute top-1 right-6 w-1.5 h-1.5 rounded-full bg-white/80 blur-[0.5px]" />
-
-                                        {/* Left Medallion: Double Gold Ring + Tag with % */}
-                                        <div className="relative shrink-0 w-8 h-8 md:w-9 md:h-9 rounded-full p-[2px] bg-gradient-to-b from-amber-200 via-yellow-400 to-amber-600 shadow-[0_0_10px_rgba(251,191,36,0.9)] group-hover:scale-105 transition-transform duration-300">
-                                            <div className="w-full h-full rounded-full bg-gradient-to-b from-stone-900 via-neutral-900 to-black flex items-center justify-center border border-amber-400/50 shadow-[inset_0_1px_3px_rgba(0,0,0,0.8)]">
-                                                <svg viewBox="0 0 24 24" className="w-4 h-4 md:w-5 md:h-5 text-white fill-white -rotate-12 drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]">
-                                                    <path d="M21.41 11.58l-9-9A2 2 0 0 0 11 2H4a2 2 0 0 0-2 2v7a2 2 0 0 0 .59 1.42l9 9a2 2 0 0 0 2.83 0l7-7a2 2 0 0 0 0-2.84zM6.5 8a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm4.5 7.5a1.25 1.25 0 1 1 0-2.5 1.25 1.25 0 0 1 0 2.5zm2-3l3.5-3.5m-1 6.5a1.25 1.25 0 1 1 0-2.5 1.25 1.25 0 0 1 0 2.5z" stroke="currentColor" strokeWidth="0.5" />
-                                                </svg>
-                                            </div>
-                                        </div>
-
-                                        {/* Stacked Italic Bold Typography */}
-                                        <div className="flex flex-col text-left justify-center leading-none select-none pr-0.5">
-                                            <span className="text-white font-black italic tracking-wider text-[9px] md:text-[10px] uppercase drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)]">
-                                                GET DISCOUNTED
-                                            </span>
-                                            <span className="text-yellow-300 font-black italic tracking-normal text-base md:text-lg uppercase drop-shadow-[0_2px_4px_rgba(0,0,0,0.95)]">
-                                                PRICE
-                                            </span>
-                                        </div>
-
-                                        {/* Right Circle Arrow */}
-                                        <div className="relative shrink-0 w-6 h-6 md:w-7 md:h-7 rounded-full bg-white text-orange-600 shadow-[0_2px_6px_rgba(0,0,0,0.4)] flex items-center justify-center group-hover:translate-x-0.5 transition-transform duration-300">
-                                            <ArrowRight className="w-3.5 h-3.5 md:w-4 md:h-4 stroke-[3]" />
-                                        </div>
-                                    </div>
-                                </div>
-                            </Link>
-                        )}
                     </motion.div>
 
                     {/* Stats */}
@@ -874,14 +709,13 @@ export default function LandingPage() {
             </section>
 
             {/* Trusted By Section */}
-            <section className="relative overflow-hidden border-y border-white/10 bg-black/35 py-12 backdrop-blur-xl">
-                <div className="absolute inset-0 bg-[linear-gradient(90deg,transparent,hsl(var(--primary)/0.08),transparent)]" />
+            <section className="py-12 border-y border-border/50 bg-muted/30 overflow-hidden">
                 <div className="container mx-auto px-4 mb-8">
-                    <p className="relative text-center text-xs font-bold uppercase text-muted-foreground">
+                    <p className="text-center text-sm text-muted-foreground">
                         Trusted by 50,000+ professionals worldwide
                     </p>
                 </div>
-                <div 
+                <div
                     className="relative w-full overflow-hidden"
                     style={{
                         maskImage: 'linear-gradient(to right, transparent, white 15%, white 85%, transparent)',
@@ -892,7 +726,7 @@ export default function LandingPage() {
                         {/* First group */}
                         <div className="flex shrink-0 justify-around items-center gap-12 md:gap-24 min-w-full px-4">
                             {["Google", "Microsoft", "Amazon", "Meta", "Netflix", "Spotify", "Apple", "Tesla", "NVIDIA", "OpenAI"].map((company, index) => (
-                                <span key={`comp1-${index}`} className="bg-gradient-to-r from-white via-white/70 to-white/35 bg-clip-text text-xl font-black text-transparent opacity-60 transition-opacity duration-300 select-none hover:opacity-100 md:text-2xl">
+                                <span key={`comp1-${index}`} className="text-xl md:text-2xl font-bold opacity-50 hover:opacity-100 transition-opacity duration-300 select-none">
                                     {company}
                                 </span>
                             ))}
@@ -900,7 +734,7 @@ export default function LandingPage() {
                         {/* Second group (duplicate) */}
                         <div className="flex shrink-0 justify-around items-center gap-12 md:gap-24 min-w-full px-4">
                             {["Google", "Microsoft", "Amazon", "Meta", "Netflix", "Spotify", "Apple", "Tesla", "NVIDIA", "OpenAI"].map((company, index) => (
-                                <span key={`comp2-${index}`} className="bg-gradient-to-r from-white via-white/70 to-white/35 bg-clip-text text-xl font-black text-transparent opacity-60 transition-opacity duration-300 select-none hover:opacity-100 md:text-2xl">
+                                <span key={`comp2-${index}`} className="text-xl md:text-2xl font-bold opacity-50 hover:opacity-100 transition-opacity duration-300 select-none">
                                     {company}
                                 </span>
                             ))}
@@ -910,163 +744,117 @@ export default function LandingPage() {
             </section>
 
             {/* Features Section */}
-            <section id="features" className="relative overflow-hidden py-28">
-                <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent,hsl(var(--primary)/0.055),transparent)]" />
-                <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/15 to-transparent" />
-                <div className="container relative z-10 mx-auto px-4">
+            <section id="features" className="py-24">
+                <div className="container mx-auto px-4">
                     <motion.div
-                        className="section-heading-modern mb-16"
+                        className="text-center mb-16"
                         initial="hidden"
                         whileInView="visible"
                         viewport={{ once: true }}
                         variants={fadeInUp}
                     >
-                        <Badge className="mb-4 border-primary/25 bg-primary/10 text-primary">Core System</Badge>
-                        <h2 className="mx-auto mb-4 max-w-3xl text-4xl font-black leading-tight text-foreground md:text-6xl">
-                            Everything runs from one polished AI command layer
+                        <Badge className="mb-4">Features</Badge>
+                        <h2 className="text-4xl md:text-5xl font-bold mb-4">
+                            Everything You Need to Create
                         </h2>
-                        <p className="mx-auto max-w-2xl text-lg leading-8 text-muted-foreground">
-                            Fast, secure, production-ready tools with a darker visual system built for focus and repeat work.
+                        <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+                            Powerful AI tools designed to supercharge your productivity and creativity.
                         </p>
                     </motion.div>
 
-                    <motion.div
-                        className="grid auto-rows-[minmax(220px,auto)] gap-5 lg:grid-cols-6"
-                        variants={staggerContainer}
-                        initial="hidden"
-                        whileInView="visible"
-                        viewport={{ once: true, margin: "-100px" }}
-                    >
-                        <motion.div variants={fadeInUp} className="tech-border-flow tech-scan-surface group relative overflow-hidden rounded-[1.75rem] border border-cyan-300/20 bg-[#07111b]/80 p-6 shadow-[0_34px_120px_-58px_rgb(34_211_238)] backdrop-blur-2xl lg:col-span-4 lg:row-span-2">
-                            <div className="absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-cyan-200/80 to-transparent" />
-                            <div className="absolute -right-20 top-10 h-56 w-56 rounded-full bg-cyan-400/15 blur-3xl" />
-                            <div className="relative flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
-                                <div>
-                                    <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-cyan-300/20 bg-cyan-300/10 px-3 py-1 text-xs font-bold uppercase text-cyan-100">
-                                        <Zap className="h-3.5 w-3.5" />
-                                        Neural response layer
-                                    </div>
-                                    <h3 className="max-w-xl text-3xl font-black leading-tight md:text-4xl">Fast work feels like a control room, not a form.</h3>
-                                    <p className="mt-4 max-w-xl leading-8 text-muted-foreground">Chat, code, writing, images and automation share one dark operational surface with clear states and readable hierarchy.</p>
-                                </div>
-                                <div className="grid w-full max-w-xs grid-cols-2 gap-3">
-                                    {[
-                                        { label: "Latency", value: "0.8s" },
-                                        { label: "Models", value: "12+" },
-                                        { label: "Exports", value: "Clean" },
-                                        { label: "Status", value: "Live" },
-                                    ].map((metric) => (
-                                        <div key={metric.label} className="rounded-2xl border border-white/10 bg-white/[0.055] p-4">
-                                            <p className="text-[11px] font-bold uppercase text-muted-foreground">{metric.label}</p>
-                                            <p className="mt-1 text-2xl font-black">{metric.value}</p>
+                    <div className="grid md:grid-cols-3 gap-8">
+                        {[
+                            {
+                                icon: Zap,
+                                title: "Lightning Fast",
+                                description: "Powered by the latest AI models for sub-second response times.",
+                            },
+                            {
+                                icon: Shield,
+                                title: "Enterprise Secure",
+                                description: "Your data is encrypted end-to-end and never used for training.",
+                            },
+                            {
+                                icon: Rocket,
+                                title: "Production Ready",
+                                description: "Export clean, semantic outputs ready for immediate use.",
+                            },
+                        ].map((feature, index) => (
+                            <motion.div
+                                key={index}
+                                initial="hidden"
+                                whileInView="visible"
+                                viewport={{ once: true }}
+                                variants={fadeInUp}
+                                transition={{ delay: index * 0.1 }}
+                            >
+                                <Card variant="interactive" className="h-full">
+                                    <CardContent className="p-8">
+                                        <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary/20 to-ai-secondary/20 flex items-center justify-center mb-6">
+                                            <feature.icon className="w-7 h-7 text-primary" />
                                         </div>
-                                    ))}
-                                </div>
-                            </div>
-
-                            <div className="relative mt-8 overflow-hidden rounded-2xl border border-white/10 bg-black/45 p-4">
-                                <div className="mb-4 flex items-center gap-2">
-                                    <span className="h-2.5 w-2.5 rounded-full bg-red-400" />
-                                    <span className="h-2.5 w-2.5 rounded-full bg-amber-300" />
-                                    <span className="h-2.5 w-2.5 rounded-full bg-emerald-400" />
-                                    <span className="ml-3 text-xs font-bold uppercase text-muted-foreground">TingAi Pipeline</span>
-                                </div>
-                                <div className="grid gap-3 md:grid-cols-3">
-                                    {["Prompt analysis", "Model routing", "Production output"].map((step, index) => (
-                                        <div key={step} className="rounded-xl border border-white/10 bg-white/[0.04] p-4">
-                                            <div className="mb-3 flex items-center justify-between">
-                                                <span className="text-xs font-bold text-muted-foreground">0{index + 1}</span>
-                                                <span className="h-1.5 w-10 rounded-full bg-gradient-to-r from-primary to-ai-secondary" />
-                                            </div>
-                                            <p className="font-bold">{step}</p>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        </motion.div>
-
-                        <motion.div variants={fadeInUp} className="tech-border-flow relative overflow-hidden rounded-[1.75rem] border border-lime-300/20 bg-[#08130b]/80 p-6 shadow-[0_34px_110px_-64px_rgb(132_204_22)] backdrop-blur-2xl lg:col-span-2">
-                            <div className="absolute inset-x-5 top-0 h-px bg-gradient-to-r from-transparent via-lime-300/80 to-transparent" />
-                            <Shield className="mb-5 h-9 w-9 text-lime-300" />
-                            <h3 className="text-2xl font-black">Secure by default</h3>
-                            <p className="mt-3 leading-7 text-muted-foreground">Clear permissions, encrypted flows, and enterprise-ready controls for serious teams.</p>
-                            <div className="mt-6 rounded-2xl border border-lime-300/20 bg-lime-300/10 p-3 text-sm font-bold text-lime-100">Risk status: protected</div>
-                        </motion.div>
-
-                        <motion.div variants={fadeInUp} className="tech-border-flow relative overflow-hidden rounded-[1.75rem] border border-orange-300/20 bg-[#140c07]/80 p-6 shadow-[0_34px_110px_-64px_rgb(249_115_22)] backdrop-blur-2xl lg:col-span-2">
-                            <div className="absolute -right-10 -top-10 h-28 w-28 rounded-full bg-orange-300/20 blur-2xl" />
-                            <Rocket className="mb-5 h-9 w-9 text-orange-200" />
-                            <h3 className="text-2xl font-black">Production output</h3>
-                            <p className="mt-3 leading-7 text-muted-foreground">Outputs are structured for handoff: copy, code, assets, plans and campaigns ready to use.</p>
-                            <div className="mt-6 flex gap-2">
-                                {["Copy", "Code", "Media"].map((item) => (
-                                    <span key={item} className="rounded-full border border-white/10 bg-white/[0.06] px-3 py-1 text-xs font-bold">{item}</span>
-                                ))}
-                            </div>
-                        </motion.div>
-                    </motion.div>
+                                        <h3 className="text-xl font-bold mb-3">{feature.title}</h3>
+                                        <p className="text-muted-foreground">{feature.description}</p>
+                                    </CardContent>
+                                </Card>
+                            </motion.div>
+                        ))}
+                    </div>
                 </div>
             </section>
 
             {/* Glow Divider */}
-            <div className="tech-line-runner" />
+            <div className="section-divider-glow" />
 
             {/* AI Marketing Showcase Section */}
-            <section id="ai-marketing" className="relative overflow-hidden py-28">
+            <section id="ai-marketing" className="py-24 relative overflow-hidden">
                 {/* Background Effects */}
-                <div className="absolute inset-0 bg-[linear-gradient(135deg,hsl(var(--primary)/0.05),transparent_42%,hsl(var(--ai-secondary)/0.08))]" />
-                <div className="absolute inset-0 bg-[linear-gradient(to_right,hsl(var(--border)/0.14)_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--border)/0.14)_1px,transparent_1px)] bg-[size:72px_72px] opacity-60" />
-                <div className="absolute left-1/2 top-10 h-72 w-72 -translate-x-1/2 rounded-full border border-primary/20 bg-primary/10 blur-3xl" />
+                <div className="absolute inset-0 gradient-mesh-bg" />
+                <div className="landing-glow-orb w-[400px] h-[400px] bg-blue-500/20 top-20 -left-40" />
+                <div className="landing-glow-orb w-[350px] h-[350px] bg-cyan-500/15 bottom-20 right-0" style={{ animationDelay: '3s' }} />
 
                 <div className="container mx-auto px-4 relative z-10">
                     <motion.div
-                        className="section-heading-modern mb-16"
+                        className="text-center mb-16"
                         initial="hidden"
                         whileInView="visible"
                         viewport={{ once: true }}
                         variants={fadeInUp}
                     >
-                        <Badge className="mb-4 border-orange-300/25 bg-orange-400/10 text-orange-200">
+                        <Badge className="mb-4 bg-gradient-to-r from-blue-500 to-cyan-500 border-0 text-white">
                             <Megaphone className="w-3 h-3 mr-1" /> AI Marketing
                         </Badge>
-                        <h2 className="mx-auto mb-5 max-w-4xl text-4xl font-black leading-tight md:text-5xl lg:text-6xl">
+                        <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-5">
                             Supercharge Your{" "}
-                            <span className="bg-gradient-to-r from-orange-300 via-orange-500 to-amber-300 bg-clip-text text-transparent">
+                            <span className="bg-gradient-to-r from-blue-500 via-cyan-500 to-teal-500 bg-clip-text text-transparent">
                                 Marketing with AI
                             </span>
                         </h2>
-                        <p className="mx-auto max-w-3xl text-lg leading-8 text-muted-foreground">
-                            From social media to SEO, email campaigns to ad copy - automate and elevate your entire marketing stack with AI-powered tools.
+                        <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+                            From social media to SEO, email campaigns to ad copy — automate and elevate your entire marketing stack with AI-powered tools.
                         </p>
                     </motion.div>
 
-                    <div className="grid items-center gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:gap-12">
+                    <div className="grid lg:grid-cols-2 gap-12 items-center">
                         {/* Feature Cards Grid */}
                         <motion.div
-                            className="space-y-3"
+                            className="grid grid-cols-1 sm:grid-cols-2 gap-4"
                             variants={staggerContainer}
                             initial="hidden"
                             whileInView="visible"
                             viewport={{ once: true, margin: "-100px" }}
                         >
                             {aiMarketingFeatures.map((feature, index) => (
-                                <motion.div
-                                    key={index}
-                                    variants={fadeInUp}
-                                    className="group relative overflow-hidden rounded-2xl border border-white/10 bg-black/35 p-3 shadow-lg shadow-black/20 backdrop-blur-xl transition-all duration-300 hover:border-cyan-300/40 hover:bg-cyan-300/[0.055]"
-                                >
-                                    <div className="flex items-center gap-4">
-                                        <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-gradient-to-br ${feature.color} shadow-lg shadow-black/30`}>
-                                            <feature.icon className="h-5 w-5 text-white" />
-                                        </div>
-                                        <div className="min-w-0 flex-1">
-                                            <div className="mb-1 flex items-center justify-between gap-3">
-                                                <h3 className="truncate text-base font-black transition-colors group-hover:text-cyan-200">{feature.title}</h3>
-                                                <span className="hidden h-1.5 w-12 rounded-full bg-gradient-to-r from-cyan-400 to-teal-300 opacity-70 sm:block" />
+                                <motion.div key={index} variants={fadeInUp}>
+                                    <Card variant="interactive" className="h-full card-shine group">
+                                        <CardContent className="p-5">
+                                            <div className={`w-11 h-11 rounded-xl bg-gradient-to-br ${feature.color} flex items-center justify-center mb-4 shadow-lg group-hover:scale-110 transition-transform duration-300`}>
+                                                <feature.icon className="w-5 h-5 text-white" />
                                             </div>
-                                            <p className="line-clamp-2 text-sm leading-6 text-muted-foreground">{feature.description}</p>
-                                        </div>
-                                    </div>
+                                            <h3 className="text-base font-bold mb-1.5 group-hover:text-primary transition-colors">{feature.title}</h3>
+                                            <p className="text-sm text-muted-foreground leading-relaxed">{feature.description}</p>
+                                        </CardContent>
+                                    </Card>
                                 </motion.div>
                             ))}
                         </motion.div>
@@ -1074,31 +862,29 @@ export default function LandingPage() {
                         {/* Marketing Dashboard Mockup */}
                         <motion.div
                             className="relative"
-                            initial={{ opacity: 0, y: 28 }}
-                            whileInView={{ opacity: 1, y: 0 }}
+                            initial={{ opacity: 0, x: 40 }}
+                            whileInView={{ opacity: 1, x: 0 }}
                             viewport={{ once: true }}
                             transition={{ duration: 0.6, delay: 0.2 }}
                         >
-                            <div className="tech-border-flow tech-scan-surface relative overflow-hidden rounded-[2rem] border border-white/10 bg-[#070a13]/85 p-5 shadow-[0_40px_120px_-55px_rgb(34_211_238)] backdrop-blur-2xl md:p-6">
-                                <div className="absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-cyan-300/70 to-transparent" />
-                                <div className="absolute right-0 top-0 h-40 w-40 rounded-full bg-cyan-400/10 blur-3xl" />
+                            <div className="relative rounded-2xl border bg-card/80 backdrop-blur-xl p-6 shadow-2xl overflow-hidden">
                                 {/* Dashboard Header */}
-                                <div className="relative mb-6 flex items-center justify-between">
+                                <div className="flex items-center justify-between mb-6">
                                     <div>
-                                        <h3 className="text-lg font-black">Marketing Dashboard</h3>
+                                        <h3 className="font-bold text-lg">Marketing Dashboard</h3>
                                         <p className="text-xs text-muted-foreground">Real-time campaign analytics</p>
                                     </div>
                                     <Badge className="bg-green-500/10 text-green-600 border-green-500/20">● Live</Badge>
                                 </div>
 
                                 {/* Stats Row */}
-                                <div className="relative mb-6 grid grid-cols-3 gap-3">
+                                <div className="grid grid-cols-3 gap-3 mb-6">
                                     {[
                                         { label: "Engagement", value: "84.2%", change: "+12.5%", color: "text-green-500" },
                                         { label: "CTR", value: "6.8%", change: "+3.2%", color: "text-blue-500" },
                                         { label: "Conversions", value: "2,847", change: "+18.7%", color: "text-violet-500" },
                                     ].map((stat, i) => (
-                                        <div key={i} className="rounded-2xl border border-white/10 bg-white/[0.045] p-3 text-center" style={{ animationDelay: `${i * 0.8}s` }}>
+                                        <div key={i} className="marketing-metric-card text-center" style={{ animationDelay: `${i * 0.8}s` }}>
                                             <p className="text-xs text-muted-foreground">{stat.label}</p>
                                             <p className="text-xl font-bold">{stat.value}</p>
                                             <p className={`text-xs font-medium ${stat.color}`}>{stat.change}</p>
@@ -1107,7 +893,7 @@ export default function LandingPage() {
                                 </div>
 
                                 {/* Fake Chart Area */}
-                                <div className="relative flex h-36 items-end justify-between gap-1.5 rounded-2xl border border-white/10 bg-gradient-to-r from-blue-500/5 via-cyan-500/10 to-teal-500/5 px-4 pb-4">
+                                <div className="h-32 rounded-xl bg-gradient-to-r from-blue-500/5 via-cyan-500/10 to-teal-500/5 border border-border/50 flex items-end justify-between px-4 pb-4 gap-1.5">
                                     {[40, 65, 45, 80, 55, 70, 85, 60, 90, 75, 95, 68].map((h, i) => (
                                         <motion.div
                                             key={i}
@@ -1121,12 +907,12 @@ export default function LandingPage() {
                                 </div>
 
                                 {/* Gradient overlay at bottom */}
-                                <div className="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-[#070a13] to-transparent" />
+                                <div className="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-card to-transparent" />
                             </div>
 
                             {/* Floating Metric Cards */}
                             <motion.div
-                                className="absolute -right-3 -top-4 z-20 rounded-2xl border border-white/10 bg-black/70 p-3 shadow-2xl backdrop-blur-xl"
+                                className="absolute -top-4 -right-4 marketing-metric-card z-20"
                                 animate={{ y: [0, -8, 0] }}
                                 transition={{ duration: 4, repeat: Infinity }}
                             >
@@ -1138,7 +924,7 @@ export default function LandingPage() {
                             </motion.div>
 
                             <motion.div
-                                className="absolute -bottom-4 -left-3 z-20 rounded-2xl border border-white/10 bg-black/70 p-3 shadow-2xl backdrop-blur-xl"
+                                className="absolute -bottom-4 -left-4 marketing-metric-card z-20"
                                 animate={{ y: [0, 6, 0] }}
                                 transition={{ duration: 5, repeat: Infinity }}
                             >
@@ -1153,7 +939,7 @@ export default function LandingPage() {
 
                     <div className="text-center mt-12">
                         <Link href="/social" target="_blank" rel="noopener noreferrer">
-                            <Button size="lg" className="orange-cta group">
+                            <Button size="lg" className="bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 text-white border-0 shadow-lg group">
                                 Explore AI Marketing
                                 <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
                             </Button>
@@ -1163,33 +949,34 @@ export default function LandingPage() {
             </section>
 
             {/* Glow Divider */}
-            <div className="tech-line-runner" />
+            <div className="section-divider-glow" />
 
             {/* Music Generation Showcase Section */}
-            <section id="music-generation" className="relative overflow-hidden border-y border-white/10 bg-black/25 py-28">
+            <section id="music-generation" className="py-24 relative overflow-hidden bg-muted/20">
                 {/* Background Effects */}
-                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,hsl(var(--primary)/0.14),transparent_44%),linear-gradient(180deg,transparent,hsl(var(--ai-tertiary)/0.065))]" />
-                <div className="absolute inset-0 bg-[linear-gradient(to_right,hsl(var(--border)/0.12)_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--border)/0.12)_1px,transparent_1px)] bg-[size:64px_64px] opacity-50" />
+                <div className="absolute inset-0 gradient-mesh-bg" />
+                <div className="landing-glow-orb w-[500px] h-[500px] bg-purple-500/15 top-0 right-1/4" />
+                <div className="landing-glow-orb w-[400px] h-[400px] bg-pink-500/10 bottom-0 left-10" style={{ animationDelay: '2s' }} />
 
                 <div className="container mx-auto px-4 relative z-10">
                     <motion.div
-                        className="section-heading-modern mb-16"
+                        className="text-center mb-16"
                         initial="hidden"
                         whileInView="visible"
                         viewport={{ once: true }}
                         variants={fadeInUp}
                     >
-                        <Badge className="mb-4 border-orange-300/25 bg-orange-400/10 text-orange-200">
+                        <Badge className="mb-4 bg-gradient-to-r from-purple-500 to-pink-500 border-0 text-white">
                             <Music className="w-3 h-3 mr-1" /> AI Music Studio
                         </Badge>
-                        <h2 className="mx-auto mb-5 max-w-4xl text-4xl font-black leading-tight md:text-5xl lg:text-6xl">
+                        <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-5">
                             Create Professional{" "}
-                            <span className="bg-gradient-to-r from-orange-300 via-orange-500 to-amber-300 bg-clip-text text-transparent">
+                            <span className="bg-gradient-to-r from-purple-500 via-pink-500 to-rose-500 bg-clip-text text-transparent">
                                 Music with AI
                             </span>
                         </h2>
-                        <p className="mx-auto max-w-3xl text-lg leading-8 text-muted-foreground">
-                            From text descriptions to full productions - generate studio-quality tracks with Suno V5. Custom lyrics, genre mixing, and audio isolation included.
+                        <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+                            From text descriptions to full productions — generate studio-quality tracks with Suno V5. Custom lyrics, genre mixing, and audio isolation included.
                         </p>
                     </motion.div>
 
@@ -1201,14 +988,14 @@ export default function LandingPage() {
                         viewport={{ once: true }}
                         transition={{ duration: 0.6 }}
                     >
-                        <div className="tech-border-flow tech-scan-surface relative overflow-hidden rounded-[2rem] border border-white/10 bg-[#100b07]/85 shadow-[0_38px_120px_-55px_rgb(249_115_22)] backdrop-blur-2xl">
+                        <div className="relative rounded-2xl border bg-card/80 backdrop-blur-xl shadow-2xl overflow-hidden">
                             {/* Top gradient bar */}
-                            <div className="h-1.5 w-full bg-gradient-to-r from-orange-500 via-amber-300 to-orange-600 shadow-[0_0_30px_rgb(249_115_22)]" />
+                            <div className="h-1.5 w-full bg-gradient-to-r from-purple-500 via-pink-500 to-rose-500" />
 
                             <div className="p-6 md:p-8">
                                 <div className="flex items-center gap-6">
                                     {/* Album Art Placeholder */}
-                                    <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl border border-white/15 bg-gradient-to-br from-orange-500 to-amber-400 shadow-[0_18px_60px_-24px_rgb(249_115_22)] pulse-ring md:h-24 md:w-24">
+                                    <div className="w-20 h-20 md:w-24 md:h-24 rounded-2xl bg-gradient-to-br from-purple-600 to-pink-500 flex items-center justify-center shadow-xl shrink-0 pulse-ring">
                                         <Music2 className="w-10 h-10 text-white" />
                                     </div>
 
@@ -1216,7 +1003,7 @@ export default function LandingPage() {
                                         <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">
                                             {summerVibesSong ? "Featured Creation" : "Now Generating"}
                                         </p>
-                                        <h3 className="truncate text-lg font-black md:text-xl">
+                                        <h3 className="text-lg md:text-xl font-bold truncate">
                                             {summerVibesSong
                                                 ? (typeof summerVibesSong.metadata === 'string' ? JSON.parse(summerVibesSong.metadata).title : summerVibesSong.metadata?.title) || "Summer Vibes"
                                                 : "Midnight Echoes"
@@ -1225,9 +1012,9 @@ export default function LandingPage() {
                                         <p className="text-sm text-muted-foreground">
                                             {summerVibesSong
                                                 ? (typeof summerVibesSong.metadata === 'string' ? JSON.parse(summerVibesSong.metadata).style : summerVibesSong.metadata?.style) || "English Pop"
-                                                : "Cinematic Synthwave - Suno V5"
+                                                : "Cinematic Synthwave • Suno V5"
                                             }
-                                            {summerVibesSong && " - Suno V5"}
+                                            {summerVibesSong && " • Suno V5"}
                                         </p>
 
                                         {/* Waveform Equalizer */}
@@ -1254,10 +1041,10 @@ export default function LandingPage() {
                                     </div>
                                 </div>
 
-                                <div className="mt-6 flex items-center justify-between border-t border-white/10 pt-4">
+                                <div className="flex items-center justify-between mt-6 pt-4 border-t border-border/50">
                                     <div className="flex items-center gap-4">
                                         <div
-                                            className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border border-white/15 bg-gradient-to-r from-orange-500 to-amber-400 shadow-lg transition-transform hover:scale-105"
+                                            className="w-10 h-10 rounded-full bg-gradient-to-r from-purple-600 to-pink-500 flex items-center justify-center cursor-pointer shadow-lg hover:scale-105 transition-transform"
                                             onClick={() => {
                                                 if (summerVibesSong?.url) {
                                                     if (!audioRef.current) {
@@ -1293,10 +1080,10 @@ export default function LandingPage() {
                                         </div>
                                     </div>
                                     <div className="flex items-center gap-2">
-                                        <Badge variant="outline" className="border-purple-400/25 bg-purple-400/10 text-xs text-purple-200">
+                                        <Badge variant="outline" className="text-xs border-purple-200 text-purple-600 bg-purple-50 dark:bg-purple-500/10 dark:border-purple-500/30 dark:text-purple-400">
                                             <Volume2 className="w-3 h-3 mr-1" /> 48kHz
                                         </Badge>
-                                        <Badge variant="outline" className="border-pink-400/25 bg-pink-400/10 text-xs text-pink-200">
+                                        <Badge variant="outline" className="text-xs border-pink-200 text-pink-600 bg-pink-50 dark:bg-pink-500/10 dark:border-pink-500/30 dark:text-pink-400">
                                             Stereo
                                         </Badge>
                                     </div>
@@ -1307,7 +1094,7 @@ export default function LandingPage() {
 
                     {/* Music Feature Cards Grid */}
                     <motion.div
-                        className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
+                        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"
                         variants={staggerContainer}
                         initial="hidden"
                         whileInView="visible"
@@ -1315,32 +1102,22 @@ export default function LandingPage() {
                     >
                         {musicFeatures.map((feature, index) => (
                             <motion.div key={index} variants={fadeInUp}>
-                                <div className="group relative h-full overflow-hidden rounded-2xl border border-white/10 bg-black/35 p-5 shadow-xl shadow-black/20 backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:border-fuchsia-300/35 hover:bg-fuchsia-300/[0.055]">
-                                    <div className="absolute inset-x-5 top-0 h-px bg-gradient-to-r from-transparent via-fuchsia-300/70 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
-                                    <div className="mb-5 flex items-center justify-between gap-4">
-                                        <div className={`flex h-12 w-12 items-center justify-center rounded-xl border border-white/10 bg-gradient-to-br ${feature.color} shadow-lg shadow-black/30 transition-transform duration-300 group-hover:scale-110`}>
-                                            <feature.icon className="h-6 w-6 text-white" />
+                                <Card variant="interactive" className="h-full card-shine group">
+                                    <CardContent className="p-6">
+                                        <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${feature.color} flex items-center justify-center mb-4 shadow-lg group-hover:scale-110 transition-transform duration-300`}>
+                                            <feature.icon className="w-6 h-6 text-white" />
                                         </div>
-                                        <div className="flex h-9 items-end gap-1">
-                                            {[4, 7, 11, 6, 9].map((height, barIndex) => (
-                                                <span
-                                                    key={barIndex}
-                                                    className="w-1.5 rounded-full bg-gradient-to-t from-fuchsia-500 to-pink-300"
-                                                    style={{ height: `${height * 3}px` }}
-                                                />
-                                            ))}
-                                        </div>
-                                    </div>
-                                    <h3 className="mb-2 text-lg font-black transition-colors group-hover:text-fuchsia-200">{feature.title}</h3>
-                                    <p className="text-sm leading-6 text-muted-foreground">{feature.description}</p>
-                                </div>
+                                        <h3 className="text-lg font-bold mb-2 group-hover:text-primary transition-colors">{feature.title}</h3>
+                                        <p className="text-sm text-muted-foreground leading-relaxed">{feature.description}</p>
+                                    </CardContent>
+                                </Card>
                             </motion.div>
                         ))}
                     </motion.div>
 
                     <div className="text-center mt-12">
                         <Link href="/music-generator" target="_blank" rel="noopener noreferrer">
-                            <Button size="lg" className="orange-cta group">
+                            <Button size="lg" className="bg-gradient-to-r from-purple-600 to-pink-500 hover:from-purple-700 hover:to-pink-600 text-white border-0 shadow-lg group">
                                 <Music className="w-4 h-4 mr-2" />
                                 Start Creating Music
                                 <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
@@ -1351,177 +1128,401 @@ export default function LandingPage() {
             </section>
 
             {/* Glow Divider */}
-            <div className="tech-line-runner" />
+            <div className="section-divider-glow" />
 
-            {/* Tools Command Matrix */}
-            <section id="tools" className="relative overflow-hidden py-28">
-                <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(3,4,10,0.2),rgba(8,12,24,0.96))]" />
-                <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.055)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.055)_1px,transparent_1px)] bg-[size:44px_44px]" />
-                <div className="absolute left-1/2 top-24 h-[520px] w-[520px] -translate-x-1/2 rounded-full bg-primary/10 blur-3xl" />
-                <div className="container relative z-10 mx-auto px-4">
-                    <motion.div className="mb-12 grid gap-8 lg:grid-cols-[0.8fr_1.2fr]" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInUp}>
-                        <div>
-                            <Badge className="mb-4 border-primary/25 bg-primary/10 text-primary">{TOOLS_COUNT_DISPLAY} Tools</Badge>
-                            <h2 className="max-w-xl text-4xl font-black leading-tight md:text-6xl">
-                                A command matrix for every AI workflow
-                            </h2>
-                        </div>
-                        <div className="tech-border-flow rounded-[1.75rem] border border-white/10 bg-black/45 p-5 shadow-2xl shadow-black/30 backdrop-blur-2xl">
-                            <div className="mb-4 flex items-center justify-between">
-                                <span className="text-xs font-black uppercase text-muted-foreground">Workspace bus</span>
-                                <span className="rounded-full border border-emerald-300/20 bg-emerald-300/10 px-3 py-1 text-xs font-bold text-emerald-200">all modules online</span>
-                            </div>
-                            <div className="grid gap-2 sm:grid-cols-4">
-                                {["Write", "Build", "Create", "Automate"].map((mode, index) => (
-                                    <div key={mode} className="rounded-2xl border border-white/10 bg-white/[0.045] p-4">
-                                        <div className="mb-3 h-1.5 rounded-full bg-gradient-to-r from-primary to-ai-secondary" style={{ opacity: 0.45 + index * 0.14 }} />
-                                        <p className="text-sm font-black">{mode}</p>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    </motion.div>
+            {/* Native Mobile App Section */}
+            <section id="mobile-app" className="py-24 relative overflow-hidden bg-muted/10">
+                {/* Background Effects */}
+                <div className="absolute inset-0 gradient-mesh-bg" />
+                <div className="landing-glow-orb w-[450px] h-[450px] bg-primary/10 top-1/4 -right-20 blur-[100px]" />
+                <div className="landing-glow-orb w-[350px] h-[350px] bg-ai-secondary/10 bottom-1/4 -left-20 blur-[90px]" style={{ animationDelay: '4s' }} />
 
-                    <motion.div className="grid gap-5 lg:grid-cols-[280px_1fr_320px]" variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-120px" }}>
-                        <motion.div variants={fadeInUp} className="tech-border-flow relative overflow-hidden rounded-[1.75rem] border border-white/10 bg-[#050812]/90 p-4 shadow-2xl shadow-black/30 backdrop-blur-2xl">
-                            <div className="mb-4 flex items-center gap-2 px-2">
-                                <Bot className="h-5 w-5 text-primary" />
-                                <span className="text-xs font-black uppercase text-muted-foreground">Module rail</span>
-                            </div>
-                            <div className="space-y-2">
-                                {features.slice(0, 8).map((feature, index) => (
-                                    <Link key={feature.title} href={feature.url} target="_blank" rel="noopener noreferrer" className="group flex items-center gap-3 rounded-2xl border border-transparent bg-white/[0.035] p-3 transition-all hover:border-primary/30 hover:bg-primary/10">
-                                        <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br ${feature.color}`}>
-                                            <feature.icon className="h-5 w-5 text-white" />
+                <div className="container mx-auto px-4 relative z-10">
+                    <div className="grid lg:grid-cols-12 gap-12 items-center">
+
+                        {/* Left column: Marketing Info & Download Badges */}
+                        <div className="lg:col-span-7 space-y-8">
+                            <motion.div
+                                initial="hidden"
+                                whileInView="visible"
+                                viewport={{ once: true }}
+                                variants={fadeInUp}
+                                className="space-y-4"
+                            >
+                                <Badge className="bg-gradient-to-r from-primary to-ai-secondary border-0 text-white">
+                                    <Smartphone className="w-3.5 h-3.5 mr-1" /> Mobile App Support
+                                </Badge>
+                                <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
+                                    Your AI Powerhouse,{" "}
+                                    <span className="bg-gradient-to-r from-primary via-ai-secondary to-ai-tertiary bg-clip-text text-transparent">
+                                        Anytime, Anywhere
+                                    </span>
+                                </h2>
+                                <p className="text-lg md:text-xl text-muted-foreground leading-relaxed">
+                                    Experience the full capabilities of TingAi on the go. Switch between your desktop browser and our native iOS or Android app seamlessly with real-time cloud synchronization.
+                                </p>
+                            </motion.div>
+
+                            {/* Features list */}
+                            <motion.div
+                                className="grid sm:grid-cols-2 gap-6"
+                                variants={staggerContainer}
+                                initial="hidden"
+                                whileInView="visible"
+                                viewport={{ once: true }}
+                            >
+                                {[
+                                    {
+                                        icon: RefreshCw,
+                                        title: "Seamless Cloud Sync",
+                                        description: "Access all your generated websites, code, images, and chat history instantly across devices.",
+                                    },
+                                    {
+                                        icon: Fingerprint,
+                                        title: "Biometric Security",
+                                        description: "Keep your workspace and secure API configurations locked with native Face ID & Touch ID support.",
+                                    },
+                                    {
+                                        icon: Bell,
+                                        title: "Push Notifications",
+                                        description: "Get notified immediately when your heavy AI workloads, video generations, or marketing audits are ready.",
+                                    },
+                                    {
+                                        icon: Sparkles,
+                                        title: "Camera Integration",
+                                        description: "Snap or upload photos directly to prompt the AI for scanning documents, translating text, or writing copy.",
+                                    },
+                                ].map((item, idx) => (
+                                    <motion.div
+                                        key={idx}
+                                        variants={fadeInUp}
+                                        className="flex gap-4 p-4 rounded-xl bg-card/40 border border-border/50 backdrop-blur-sm hover:border-primary/20 transition-all duration-300"
+                                    >
+                                        <div className="w-10 h-10 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0">
+                                            <item.icon className="w-5 h-5 text-primary" />
                                         </div>
-                                        <div className="min-w-0 flex-1">
-                                            <p className="truncate text-sm font-black">{feature.title}</p>
-                                            <p className="text-[11px] uppercase text-muted-foreground">node {String(index + 1).padStart(2, "0")}</p>
+                                        <div>
+                                            <h4 className="font-bold text-base mb-1">{item.title}</h4>
+                                            <p className="text-sm text-muted-foreground leading-normal">{item.description}</p>
                                         </div>
-                                        <ArrowRight className="h-4 w-4 text-muted-foreground opacity-0 transition-all group-hover:translate-x-1 group-hover:opacity-100" />
-                                    </Link>
-                                ))}
-                            </div>
-                        </motion.div>
-
-                        <motion.div variants={fadeInUp} className="tech-border-flow tech-scan-surface relative min-h-[580px] overflow-hidden rounded-[2rem] border border-cyan-300/20 bg-[#06101a]/90 p-5 shadow-[0_44px_140px_-65px_rgb(34_211_238)] backdrop-blur-2xl">
-                            <div className="absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-cyan-200/80 to-transparent" />
-                            <div className="absolute -right-24 top-10 h-72 w-72 rounded-full bg-cyan-400/15 blur-3xl" />
-                            <div className="relative mb-5 flex items-center justify-between">
-                                <div>
-                                    <p className="text-xs font-black uppercase text-cyan-200">Live orchestration canvas</p>
-                                    <h3 className="mt-2 text-3xl font-black">Route any job through the right AI engine</h3>
-                                </div>
-                                <Cpu className="h-9 w-9 text-cyan-200" />
-                            </div>
-                            <div className="relative grid gap-4 md:grid-cols-2">
-                                {features.slice(8, 14).map((feature, index) => (
-                                    <Link key={feature.title} href={feature.url} target="_blank" rel="noopener noreferrer" className={`group relative overflow-hidden rounded-2xl border border-white/10 bg-black/35 p-5 transition-all hover:-translate-y-1 hover:border-cyan-300/35 hover:bg-cyan-300/[0.06] ${index === 0 || index === 5 ? "md:col-span-2" : ""}`}>
-                                        <div className={`absolute inset-x-5 top-0 h-px bg-gradient-to-r ${feature.color}`} />
-                                        <div className="flex items-start justify-between gap-5">
-                                            <div>
-                                                <p className="mb-2 text-[11px] font-black uppercase text-muted-foreground">pipeline / {String(index + 9).padStart(2, "0")}</p>
-                                                <h4 className="text-xl font-black">{feature.title}</h4>
-                                                <p className="mt-2 max-w-md text-sm leading-6 text-muted-foreground">{feature.description}</p>
-                                            </div>
-                                            <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br ${feature.color} shadow-lg shadow-black/30`}>
-                                                <feature.icon className="h-6 w-6 text-white" />
-                                            </div>
-                                        </div>
-                                        <div className="mt-5 flex items-center gap-2">
-                                            <span className="h-1.5 w-20 rounded-full bg-gradient-to-r from-cyan-400 to-teal-300" />
-                                            <span className="text-xs font-bold uppercase text-muted-foreground">ready</span>
-                                        </div>
-                                    </Link>
-                                ))}
-                            </div>
-                        </motion.div>
-
-                        <motion.div variants={fadeInUp} className="space-y-5">
-                            <div className="tech-border-flow overflow-hidden rounded-[1.75rem] border border-orange-300/20 bg-[#150c07]/90 p-5 shadow-[0_34px_120px_-70px_rgb(249_115_22)] backdrop-blur-2xl">
-                                <p className="text-xs font-black uppercase text-orange-200">Command preview</p>
-                                <div className="mt-5 rounded-2xl border border-white/10 bg-black/45 p-4 font-mono text-xs leading-6 text-slate-300">
-                                    <p><span className="text-emerald-300">$</span> ting run campaign</p>
-                                    <p className="text-cyan-200">routing: writer + image + social</p>
-                                    <p className="text-orange-200">status: production ready</p>
-                                </div>
-                            </div>
-                            <div className="tech-border-flow overflow-hidden rounded-[1.75rem] border border-white/10 bg-white/[0.045] p-5 backdrop-blur-2xl">
-                                <div className="mb-5 flex items-center justify-between">
-                                    <p className="text-xs font-black uppercase text-muted-foreground">Quick launch</p>
-                                    <Globe className="h-5 w-5 text-primary" />
-                                </div>
-                                <div className="grid grid-cols-3 gap-2">
-                                    {features.slice(0, 6).map((feature) => (
-                                        <Link key={feature.title} href={feature.url} target="_blank" rel="noopener noreferrer" className={`flex aspect-square items-center justify-center rounded-2xl border border-white/10 bg-gradient-to-br ${feature.color} transition-transform hover:-translate-y-1`}>
-                                            <feature.icon className="h-5 w-5 text-white" />
-                                        </Link>
-                                    ))}
-                                </div>
-                            </div>
-                            <Link href="/dashboard" target="_blank" rel="noopener noreferrer">
-                                <Button size="lg" className="orange-cta w-full">
-                                    Open Full Workspace
-                                    <ArrowRight className="h-4 w-4" />
-                                </Button>
-                            </Link>
-                        </motion.div>
-                    </motion.div>
-                </div>
-            </section>
-
-            {/* Signal Board */}
-            <section className="relative overflow-hidden py-28">
-                <div className="absolute inset-0 bg-[linear-gradient(180deg,#04050b,#070b15)]" />
-                <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
-                <motion.div className="absolute left-[7%] top-24 h-80 w-80 rounded-full bg-amber-300/[0.08] blur-[100px]" animate={{ scale: [0.8, 1.18, 0.8], opacity: [0.35, 0.75, 0.35] }} transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }} />
-                <div className="container relative z-10 mx-auto px-4">
-                    <div className="grid gap-6 lg:grid-cols-[1.15fr_0.85fr]">
-                        <motion.div variants={fadeInUp} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} className="tech-border-flow group relative overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.045] p-8 shadow-2xl shadow-black/30 backdrop-blur-2xl md:p-10">
-                            <motion.div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-amber-300/10 blur-3xl" animate={{ x: [0, -45, 0], y: [0, 55, 0] }} transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }} />
-                            <Badge className="mb-6 border-amber-300/20 bg-amber-300/10 text-amber-200">User Signals</Badge>
-                            <h2 className="max-w-3xl text-4xl font-black leading-tight md:text-6xl">Proof flowing through a live signal board</h2>
-                            <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-400">Real creator feedback, usage momentum and generation volume, presented as one living data surface.</p>
-                            <div className="mt-10 grid gap-4 md:grid-cols-3">
-                                {["5.0 avg rating", "50K+ creators", "10M+ generations"].map((item, index) => (
-                                    <motion.div key={item} whileHover={{ y: -7, rotateX: 4 }} className="rounded-2xl border border-white/10 bg-black/35 p-4 shadow-xl shadow-black/20">
-                                        <div className="mb-7 flex items-center justify-between"><span className="text-[10px] font-black uppercase text-slate-500">0{index + 1}</span><span className="h-2 w-2 rounded-full bg-emerald-300 shadow-[0_0_14px_rgb(110_231_183)]" /></div>
-                                        <p className="text-sm font-black">{item}</p>
-                                        <motion.div className="mt-3 h-1.5 origin-left rounded-full bg-gradient-to-r from-amber-300 to-primary" initial={{ scaleX: 0 }} whileInView={{ scaleX: 1 }} viewport={{ once: true }} transition={{ duration: 1.1, delay: index * 0.16 }} />
                                     </motion.div>
                                 ))}
-                            </div>
-                        </motion.div>
-                        <motion.div className="grid gap-4" variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-80px" }}>
-                            {testimonials.map((testimonial, index) => (
-                                <motion.div key={testimonial.author} variants={fadeInUp} whileHover={{ x: -8, scale: 1.015 }} className="tech-border-flow relative overflow-hidden rounded-[1.5rem] border border-white/10 bg-black/45 p-5 backdrop-blur-2xl transition-colors hover:border-primary/35">
-                                    <motion.div className="absolute inset-y-0 left-0 w-px bg-gradient-to-b from-transparent via-primary to-transparent" animate={{ y: ["-100%", "100%"] }} transition={{ duration: 3.4 + index, repeat: Infinity, ease: "linear" }} />
-                                    <div className="mb-4 flex items-center justify-between gap-4">
-                                        <div className="flex items-center gap-3"><div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-white/10 bg-gradient-to-br from-primary to-ai-secondary font-black text-white shadow-lg shadow-primary/20">{testimonial.avatar}</div><div><p className="font-black">{testimonial.author}</p><p className="text-xs text-muted-foreground">{testimonial.role}</p></div></div>
-                                        <div className="flex gap-0.5">{[...Array(5)].map((_, i) => <Star key={i} className="h-4 w-4 fill-amber-300 text-amber-300" />)}</div>
+                            </motion.div>
+
+                            {/* Store Badges */}
+                            <motion.div
+                                initial="hidden"
+                                whileInView="visible"
+                                viewport={{ once: true }}
+                                variants={fadeInUp}
+                                transition={{ delay: 0.3 }}
+                                className="flex flex-wrap gap-4 pt-2"
+                            >
+                                {/* App Store Badge */}
+                                <div className="flex items-center gap-3 bg-neutral-950 hover:bg-neutral-900 border border-neutral-800 text-white px-5 py-2.5 rounded-2xl transition-all duration-300 shadow-xl cursor-pointer group active:scale-[0.98]">
+                                    <svg viewBox="0 0 24 24" className="w-6 h-6 fill-white">
+                                        <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 4.17c.66-.81 1.11-1.93.99-3.06-1 .04-2.22.67-2.94 1.5-.64.74-1.2 1.88-1.05 2.99 1.12.09 2.27-.58 3-1.43z" />
+                                    </svg>
+                                    <div className="flex flex-col text-left leading-none">
+                                        <span className="text-[9px] uppercase text-neutral-400 tracking-wider">Download on the</span>
+                                        <span className="text-sm font-bold mt-0.5">App Store</span>
                                     </div>
-                                    <p className="leading-7 text-slate-300">"{testimonial.quote}"</p>
-                                </motion.div>
-                            ))}
-                        </motion.div>
+                                </div>
+
+                                {/* Google Play Badge */}
+                                <div className="flex items-center gap-3 bg-neutral-950 hover:bg-neutral-900 border border-neutral-800 text-white px-5 py-2.5 rounded-2xl transition-all duration-300 shadow-xl cursor-pointer group active:scale-[0.98]">
+                                    <svg viewBox="0 0 24 24" className="w-6 h-6 fill-white">
+                                        <path d="M3 5.27v13.46c0 .76.54 1.43 1.29 1.57l8.76-8.76L4.29 2.7C3.54 2.84 3 3.51 3 4.27zM18.86 11.23l-3.32-1.9-2.54 2.54 2.54 2.54 3.32-1.9c.72-.41.72-1.47 0-1.88zM4.97 2.03l8.08 8.08 2.86-2.86-9.65-5.52a1.36 1.36 0 0 0-1.29.3zM13.05 13.89l-8.08 8.08c.36.19.78.19 1.29-.1l9.65-5.52-2.86-2.86z" />
+                                    </svg>
+                                    <div className="flex flex-col text-left leading-none">
+                                        <span className="text-[9px] uppercase text-neutral-400 tracking-wider">Get it on</span>
+                                        <span className="text-sm font-bold mt-0.5">Google Play</span>
+                                    </div>
+                                </div>
+                            </motion.div>
+                        </div>
+
+                        {/* Right column: Interactive CSS Phone Mockup */}
+                        <div className="lg:col-span-5 relative flex justify-center">
+                            {/* Glow behind phone */}
+                            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] h-[350px] bg-gradient-to-tr from-primary to-ai-tertiary rounded-full blur-[100px] opacity-25 animate-pulse-slow" />
+
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.9, y: 50 }}
+                                whileInView={{ opacity: 1, scale: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ duration: 0.6, type: "spring", stiffness: 100 }}
+                                className="relative w-[300px] md:w-[320px] aspect-[9/18.5] bg-[#0c0a0f] rounded-[45px] border-4 border-[#252329] p-3.5 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.8),0_0_50px_rgba(139,92,246,0.15)] overflow-hidden flex flex-col group"
+                            >
+                                {/* Phone Notch */}
+                                <div className="absolute top-0 left-1/2 -translate-x-1/2 h-5 w-32 bg-[#252329] rounded-b-2xl z-30 flex items-center justify-center gap-1.5 px-3">
+                                    <span className="w-2.5 h-2.5 rounded-full bg-neutral-900 border border-neutral-800" />
+                                    <span className="w-10 h-1 bg-neutral-900 rounded-full" />
+                                </div>
+
+                                {/* Phone Status Bar */}
+                                <div className="w-full flex justify-between items-center px-4 pt-1 pb-2 text-[10px] text-neutral-400 font-medium z-20">
+                                    <span>9:41</span>
+                                    <div className="flex items-center gap-1">
+                                        <svg viewBox="0 0 24 24" className="w-3 h-3 fill-current">
+                                            <path d="M12 3c-4.97 0-9 4.03-9 9 0 2.12.74 4.07 1.97 5.61L4.35 19.4c-.39.39-.39 1.02 0 1.41.39.39 1.02.39 1.41 0l1.79-1.79C9.09 19.64 10.5 20 12 20c4.97 0 9-4.03 9-9s-4.03-9-9-9zm0 15c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6z" />
+                                        </svg>
+                                        <span className="w-4 h-2.5 rounded-[3px] border border-neutral-400 p-[1px] flex items-center"><span className="h-full w-[80%] bg-neutral-400 rounded-[1px]" /></span>
+                                    </div>
+                                </div>
+
+                                {/* Inner Screen Container */}
+                                <div className="relative flex-1 rounded-[32px] bg-[#070509] border border-neutral-900 overflow-hidden flex flex-col p-3">
+
+                                    {/* Glass reflection shine */}
+                                    <div className="absolute top-0 inset-x-0 h-1/2 bg-gradient-to-b from-white/5 to-transparent rounded-t-full pointer-events-none z-20" />
+
+                                    {/* App Header */}
+                                    <div className="flex items-center justify-between pb-2.5 mb-3 border-b border-neutral-900">
+                                        <div className="flex items-center gap-2">
+                                            <div className="w-6 h-6 rounded-md bg-gradient-to-br from-primary to-ai-secondary flex items-center justify-center">
+                                                <Sparkles className="w-3 h-3 text-white fill-white" />
+                                            </div>
+                                            <div>
+                                                <h5 className="text-[10px] font-black text-white leading-none">TingAi Mobile</h5>
+                                                <span className="text-[8px] text-green-500 font-semibold flex items-center gap-0.5"><span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-ping" /> Online</span>
+                                            </div>
+                                        </div>
+                                        <div className="flex items-center gap-1.5">
+                                            <span className="w-1.5 h-1.5 rounded-full bg-neutral-800" />
+                                            <span className="w-1.5 h-1.5 rounded-full bg-neutral-800" />
+                                        </div>
+                                    </div>
+
+                                    {/* Screen Chat Flow / Simulated Mock */}
+                                    <div className="flex-1 space-y-3 overflow-y-auto custom-scrollbar text-[9px] flex flex-col justify-end pb-2">
+
+                                        {/* Prompt 1 */}
+                                        <motion.div
+                                            initial={{ opacity: 0, y: 10 }}
+                                            whileInView={{ opacity: 1, y: 0 }}
+                                            viewport={{ once: true }}
+                                            transition={{ delay: 0.5 }}
+                                            className="bg-neutral-900 border border-neutral-800/50 rounded-2xl rounded-tr-sm p-2.5 max-w-[85%] self-end text-right text-white/90"
+                                        >
+                                            Compose a short melody layout!
+                                        </motion.div>
+
+                                        {/* Response 1 */}
+                                        <motion.div
+                                            initial={{ opacity: 0, y: 10 }}
+                                            whileInView={{ opacity: 1, y: 0 }}
+                                            viewport={{ once: true }}
+                                            transition={{ delay: 1.2 }}
+                                            className="bg-primary/10 border border-primary/20 rounded-2xl rounded-tl-sm p-2.5 max-w-[85%] self-start text-left text-neutral-300 space-y-1.5"
+                                        >
+                                            <p>Generating track... Vibe: "Sunset Lo-Fi"</p>
+
+                                            {/* Mini visual representation of generating music */}
+                                            <div className="h-6 rounded-lg bg-neutral-900/60 border border-neutral-800 flex items-center px-2 gap-1.5">
+                                                <Play className="w-2 h-2 text-primary fill-primary" />
+                                                <div className="flex-1 bg-neutral-800 h-1 rounded-full overflow-hidden">
+                                                    <motion.div
+                                                        className="h-full bg-gradient-to-r from-primary to-ai-secondary"
+                                                        animate={{ width: ["0%", "100%"] }}
+                                                        transition={{ duration: 4, repeat: Infinity }}
+                                                    />
+                                                </div>
+                                                <span className="text-[7px] text-neutral-500 font-mono">0:24</span>
+                                            </div>
+                                        </motion.div>
+
+                                        {/* Prompt 2 */}
+                                        <motion.div
+                                            initial={{ opacity: 0, y: 10 }}
+                                            whileInView={{ opacity: 1, y: 0 }}
+                                            viewport={{ once: true }}
+                                            transition={{ delay: 2.2 }}
+                                            className="bg-neutral-900 border border-neutral-800/50 rounded-2xl rounded-tr-sm p-2.5 max-w-[85%] self-end text-right text-white/90"
+                                        >
+                                            Awesome, sync this with my laptop.
+                                        </motion.div>
+
+                                        {/* Response 2 */}
+                                        <motion.div
+                                            initial={{ opacity: 0, y: 10 }}
+                                            whileInView={{ opacity: 1, y: 0 }}
+                                            viewport={{ once: true }}
+                                            transition={{ delay: 3.0 }}
+                                            className="bg-primary/10 border border-primary/20 rounded-2xl rounded-tl-sm p-2.5 max-w-[85%] self-start text-left text-neutral-300 flex items-center gap-1.5"
+                                        >
+                                            <CheckCircle className="w-3.5 h-3.5 text-green-500 shrink-0" />
+                                            <span>Synced! Saved to Workspace.</span>
+                                        </motion.div>
+
+                                        {/* Bouncing typing indicator */}
+                                        <div className="flex gap-1 items-center self-start p-1.5 bg-neutral-900/50 rounded-full border border-neutral-900">
+                                            <span className="w-1 h-1 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                                            <span className="w-1 h-1 bg-primary rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                                            <span className="w-1 h-1 bg-primary rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                                        </div>
+                                    </div>
+
+                                    {/* Screen Input Area */}
+                                    <div className="mt-2.5 pt-2 border-t border-neutral-900 flex items-center gap-1.5">
+                                        <div className="flex-1 bg-neutral-900/50 border border-neutral-800 rounded-full py-1.5 px-3 flex items-center justify-between text-neutral-500 text-[8px]">
+                                            <span>Prompt TingAi...</span>
+                                            <Sparkles className="w-2.5 h-2.5 text-primary" />
+                                        </div>
+                                        <div className="w-7 h-7 rounded-full bg-primary flex items-center justify-center text-white shrink-0">
+                                            <ArrowRight className="w-3.5 h-3.5" />
+                                        </div>
+                                    </div>
+
+                                    {/* Home Indicator */}
+                                    <div className="w-20 h-1 bg-neutral-800 rounded-full mx-auto mt-2.5" />
+                                </div>
+                            </motion.div>
+                        </div>
                     </div>
                 </div>
             </section>
 
-            {/* Pricing OS */}
-            <section id="pricing" className="relative overflow-hidden border-y border-white/10 bg-black py-20 md:py-28">
-                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,hsl(var(--primary)/0.16),transparent_42%)]" />
-                <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.035)_1px,transparent_1px)] bg-[size:9%_100%]" />
-                <div className="container relative z-10 mx-auto px-4">
-                    <motion.div className="mb-14 flex flex-col justify-between gap-6 lg:flex-row lg:items-end" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInUp}>
-                        <div><Badge className="mb-4 border-primary/25 bg-primary/10 text-primary">Pricing OS</Badge><h2 className="max-w-3xl text-4xl font-black leading-tight md:text-6xl">Choose your workspace deployment</h2></div>
-                        <p className="max-w-md text-lg leading-8 text-muted-foreground">Start free, then scale tokens and access as your workflow grows.</p>
+            {/* Glow Divider */}
+            <div className="section-divider-glow" />
+
+            {/* Tools Grid Section */}
+            <section id="tools" className="py-24 bg-muted/30 relative">
+                <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20" />
+                <div className="container mx-auto px-4 relative z-10">
+                    <motion.div
+                        className="text-center mb-16"
+                        initial="hidden"
+                        whileInView="visible"
+                        viewport={{ once: true }}
+                        variants={fadeInUp}
+                    >
+                        <Badge className="mb-4">{TOOLS_COUNT_DISPLAY} Tools</Badge>
+                        <h2 className="text-4xl md:text-5xl font-bold mb-4">
+                            A Tool for Every Task
+                        </h2>
+                        <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+                            Replace your fragmented subscription stack with one powerful suite.
+                        </p>
                     </motion.div>
 
-                    <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-80px" }} variants={staggerContainer} className="tech-border-flow overflow-hidden rounded-[2rem] border border-white/10 bg-[#050812]/90 shadow-2xl shadow-black/40 backdrop-blur-2xl">
-                        <div className="grid border-b border-white/10 bg-white/[0.035] px-5 py-4 text-xs font-black uppercase text-muted-foreground md:grid-cols-[1fr_0.8fr_1.3fr_auto]">
-                            <span>Plan</span><span className="hidden md:block">Cost</span><span className="hidden md:block">Included stack</span><span className="hidden md:block">Action</span>
-                        </div>
+                    <motion.div
+                        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+                        variants={staggerContainer}
+                        initial="hidden"
+                        whileInView="visible"
+                        viewport={{ once: true, margin: "-100px" }}
+                    >
+                        {features.map((feature, index) => (
+                            <motion.div key={index} variants={fadeInUp}>
+                                <Link href={feature.url} target="_blank" rel="noopener noreferrer" className="block h-full">
+                                    <Card variant="interactive" className="h-full group">
+                                        <CardContent className="p-6">
+                                            <div className="flex justify-between items-start mb-4">
+                                                <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${feature.color} flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300`}>
+                                                    <feature.icon className="w-6 h-6 text-white" />
+                                                </div>
+                                                {feature.isNew && (
+                                                    <Badge className="bg-gradient-to-r from-green-500 to-emerald-500 border-0">
+                                                        New
+                                                    </Badge>
+                                                )}
+                                            </div>
+                                            <h3 className="text-lg font-bold mb-2 group-hover:text-primary transition-colors">
+                                                {feature.title}
+                                            </h3>
+                                            <p className="text-sm text-muted-foreground leading-relaxed">
+                                                {feature.description}
+                                            </p>
+                                        </CardContent>
+                                    </Card>
+                                </Link>
+                            </motion.div>
+                        ))}
+                    </motion.div>
+
+                    <div className="text-center mt-12">
+                        <Link href="/dashboard" target="_blank" rel="noopener noreferrer">
+                            <Button size="lg" variant="outline">
+                                View All {TOOLS_COUNT_DISPLAY} Tools
+                                <ArrowRight className="w-4 h-4 ml-2" />
+                            </Button>
+                        </Link>
+                    </div>
+                </div>
+            </section>
+
+            {/* Testimonials Section */}
+            <section className="py-24">
+                <div className="container mx-auto px-4">
+                    <motion.div
+                        className="text-center mb-16"
+                        initial="hidden"
+                        whileInView="visible"
+                        viewport={{ once: true }}
+                        variants={fadeInUp}
+                    >
+                        <Badge className="mb-4">Testimonials</Badge>
+                        <h2 className="text-4xl md:text-5xl font-bold mb-4">
+                            Loved by Creators Worldwide
+                        </h2>
+                    </motion.div>
+
+                    <div className="grid md:grid-cols-3 gap-8">
+                        {testimonials.map((testimonial, index) => (
+                            <motion.div
+                                key={index}
+                                initial="hidden"
+                                whileInView="visible"
+                                viewport={{ once: true }}
+                                variants={fadeInUp}
+                                transition={{ delay: index * 0.1 }}
+                            >
+                                <Card variant="glass" className="h-full">
+                                    <CardContent className="p-8">
+                                        <div className="flex gap-1 mb-4">
+                                            {[...Array(5)].map((_, i) => (
+                                                <Star key={i} className="w-5 h-5 fill-amber-400 text-amber-400" />
+                                            ))}
+                                        </div>
+                                        <p className="text-lg mb-6 leading-relaxed">"{testimonial.quote}"</p>
+                                        <div className="flex items-center gap-3">
+                                            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-ai-secondary flex items-center justify-center text-white font-bold">
+                                                {testimonial.avatar}
+                                            </div>
+                                            <div>
+                                                <p className="font-semibold">{testimonial.author}</p>
+                                                <p className="text-sm text-muted-foreground">{testimonial.role}</p>
+                                            </div>
+                                        </div>
+                                    </CardContent>
+                                </Card>
+                            </motion.div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* Pricing Section */}
+            <section id="pricing" className="py-24 bg-muted/30">
+                <div className="container mx-auto px-4">
+                    <motion.div
+                        className="text-center mb-16"
+                        initial="hidden"
+                        whileInView="visible"
+                        viewport={{ once: true }}
+                        variants={fadeInUp}
+                    >
+                        <Badge className="mb-4">Pricing</Badge>
+                        <h2 className="text-4xl md:text-5xl font-bold mb-4">
+                            Simple, Transparent Pricing
+                        </h2>
+                        <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+                            Start free and scale as you grow. No hidden fees.
+                        </p>
+                    </motion.div>
+
+                    <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
                         {(plans.length > 0 ? plans : pricingPlans).map((plan, index) => {
                             const isEnterprise = plan.name.toLowerCase().includes('enterprise');
                             const displayPrice = typeof plan.price === 'number'
@@ -1531,50 +1532,128 @@ export default function LandingPage() {
                             const displayPeriod = plan.period || (plan.price === 0 && plan.name.toLowerCase().includes('free') ? 'forever' : (plan.interval ? `/${plan.interval}` : ''));
 
                             return (
-                                <motion.div key={index} variants={fadeInUp} whileHover={{ backgroundColor: "rgba(249,115,22,0.08)" }} className={`group relative grid gap-5 border-b border-white/10 p-5 last:border-b-0 md:grid-cols-[1fr_0.8fr_1.3fr_auto] md:items-center ${plan.popular ? "bg-primary/[0.055]" : "bg-transparent"}`}>
-                                    {plan.popular && <motion.div className="absolute inset-y-0 left-0 w-1 bg-gradient-to-b from-amber-300 via-primary to-orange-500" animate={{ opacity: [0.45, 1, 0.45] }} transition={{ duration: 2.2, repeat: Infinity }} />}
-                                    <div className="flex items-center gap-4"><div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-black/40 font-mono text-xs font-black text-primary">0{index + 1}</div><div><div className="flex items-center gap-2"><h3 className="text-xl font-black">{plan.name}</h3>{plan.popular && <Badge className="bg-primary/15 text-primary">Popular</Badge>}</div><p className="mt-1 text-sm text-muted-foreground">{plan.description}</p></div></div>
-                                    <div><span className="text-3xl font-black">{displayPrice}</span><span className="ml-1 text-sm text-muted-foreground">{displayPeriod}</span></div>
-                                    <div className="flex flex-wrap gap-2">{plan.features.slice(0, 4).map((feature: string, i: number) => <span key={i} className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-xs text-slate-300"><Check className="h-3 w-3 text-emerald-300" />{feature}</span>)}</div>
-                                    <Link href="/register" target="_blank" rel="noopener noreferrer"><Button className={`${plan.popular ? "orange-cta" : "orange-cta-secondary"} w-full whitespace-nowrap md:w-auto`} variant={plan.popular ? "default" : "outline"}>{plan.cta || (isEnterprise ? "Contact Sales" : "Deploy plan")}<ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" /></Button></Link>
+                                <motion.div
+                                    key={index}
+                                    initial="hidden"
+                                    whileInView="visible"
+                                    viewport={{ once: true }}
+                                    variants={fadeInUp}
+                                    transition={{ delay: index * 0.1 }}
+                                >
+                                    <Card
+                                        variant={plan.popular ? "pricing" : "default"}
+                                        className={`h-full relative ${plan.popular ? "border-primary shadow-glow ring-2 ring-primary ring-offset-2" : ""
+                                            }`}
+                                    >
+                                        {plan.popular && (
+                                            <div className="absolute -top-4 left-1/2 -translate-x-1/2 z-20">
+                                                <Badge className="bg-primary hover:bg-primary/90 border-0 shadow-xl text-white px-4 py-1 uppercase text-[10px] font-bold tracking-wider">
+                                                    Most Popular
+                                                </Badge>
+                                            </div>
+                                        )}
+                                        <CardContent className="p-8">
+                                            <h3 className="text-xl font-bold mb-2">{plan.name}</h3>
+                                            <div className="flex items-baseline gap-1 mb-2">
+                                                <span className="text-4xl font-bold">{displayPrice}</span>
+                                                <span className="text-muted-foreground">{displayPeriod}</span>
+                                            </div>
+                                            <p className="text-muted-foreground mb-6">{plan.description}</p>
+                                            <ul className="space-y-3 mb-8">
+                                                {plan.features.map((feature: string, i: number) => (
+                                                    <li key={i} className="flex items-center gap-2">
+                                                        <Check className="w-5 h-5 text-green-500" />
+                                                        <span className="text-sm">{feature}</span>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                            <Link href="/register" target="_blank" rel="noopener noreferrer">
+                                                <Button
+                                                    className="w-full"
+                                                    variant={plan.popular ? "default" : "outline"}
+                                                >
+                                                    {plan.cta || (isEnterprise ? "Contact Sales" : "Get Started")}
+                                                </Button>
+                                            </Link>
+                                        </CardContent>
+                                    </Card>
                                 </motion.div>
                             );
                         })}
-                    </motion.div>
+                    </div>
                 </div>
             </section>
 
-            {/* Launch Console */}
-            <section className="relative overflow-hidden pb-20 pt-16 md:py-28">
-                <motion.div className="absolute inset-x-[15%] bottom-0 h-80 rounded-full bg-primary/15 blur-[120px]" animate={{ scaleX: [0.75, 1.15, 0.75], opacity: [0.35, 0.7, 0.35] }} transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }} />
-                <div className="container relative z-10 mx-auto px-4">
-                    <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={fadeInUp} className="tech-border-flow relative mx-auto max-w-6xl overflow-hidden rounded-[2rem] border border-white/10 bg-[#070910]/90 shadow-[0_54px_180px_-70px_hsl(var(--primary))] backdrop-blur-2xl">
-                        <div className="flex items-center justify-between border-b border-white/10 bg-black/35 px-5 py-3"><div className="flex gap-2"><span className="h-2.5 w-2.5 rounded-full bg-rose-400" /><span className="h-2.5 w-2.5 rounded-full bg-amber-300" /><span className="h-2.5 w-2.5 rounded-full bg-emerald-300" /></div><span className="font-mono text-[10px] font-bold uppercase text-slate-500">ting://launch-workspace</span><span className="h-2 w-2 rounded-full bg-emerald-300 shadow-[0_0_14px_rgb(110_231_183)]" /></div>
-                        <div className="grid gap-8 p-7 md:p-12 lg:grid-cols-[1.25fr_0.75fr] lg:items-center">
-                            <div><Badge className="mb-5 border-orange-300/20 bg-orange-400/10 text-orange-200">Ready to launch</Badge><h2 className="text-4xl font-black leading-tight md:text-6xl">Turn the whole AI stack on.</h2><p className="mt-5 max-w-2xl text-lg leading-8 text-slate-400">Join 50,000+ creators using {settings?.metadata?.siteName || "TingAi"} to move from first idea to finished work in one connected environment.</p><div className="mt-8 flex flex-col gap-3 sm:flex-row"><Link href="/register" target="_blank" rel="noopener noreferrer"><Button size="xl" className="orange-cta group w-full sm:w-auto">Start free<Sparkles className="h-5 w-5 transition-transform group-hover:rotate-12 group-hover:scale-110" /></Button></Link><Link href="/dashboard" target="_blank" rel="noopener noreferrer"><Button size="xl" variant="outline" className="orange-cta-secondary w-full sm:w-auto">Explore workspace<ArrowRight className="h-5 w-5" /></Button></Link></div></div>
-                            <div className="relative mx-auto aspect-square w-full max-w-[330px]">
-                                <motion.div className="absolute inset-[12%] rounded-full border border-primary/35" animate={{ rotate: 360 }} transition={{ duration: 18, repeat: Infinity, ease: "linear" }}><span className="absolute left-1/2 top-0 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-cyan-300 shadow-[0_0_22px_rgb(103_232_249)]" /></motion.div>
-                                <motion.div className="absolute inset-[25%] rounded-2xl border border-orange-300/30 bg-gradient-to-br from-primary/20 to-amber-400/10 shadow-2xl shadow-primary/25 backdrop-blur-xl" animate={{ rotate: [0, 8, -6, 0], y: [0, -12, 7, 0] }} transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }} />
-                                <div className="absolute inset-0 flex items-center justify-center"><div className="flex h-24 w-24 items-center justify-center rounded-[1.75rem] border border-white/20 bg-black/60 shadow-[0_0_65px_hsl(var(--primary)/0.55)]"><Sparkles className="h-11 w-11 text-white" /></div></div>
+            {/* CTA Section */}
+            <section className="py-24 relative overflow-hidden">
+                <div className="container mx-auto px-4 relative z-10">
+                    <div className="max-w-4xl mx-auto bg-gradient-to-r from-primary via-ai-secondary to-ai-tertiary rounded-3xl p-12 md:p-16 text-white shadow-2xl overflow-hidden relative">
+                        <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20" />
+                        <div className="relative z-10 text-center space-y-6">
+                            <h2 className="text-4xl md:text-5xl font-bold tracking-tight">
+                                Ready to Transform Your Workflow?
+                            </h2>
+                            <p className="text-lg md:text-xl text-white/80 max-w-2xl mx-auto">
+                                Join 50,000+ creators and professionals using TingAi to work smarter.
+                            </p>
+
+                            <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
+                                <Link href="/register" target="_blank" rel="noopener noreferrer">
+                                    <Button size="xl" variant="white">
+                                        Get Started for Free
+                                        <ArrowRight className="w-5 h-5 ml-2" />
+                                    </Button>
+                                </Link>
+                                <Link href="/dashboard" target="_blank" rel="noopener noreferrer">
+                                    <Button size="xl" variant="glass" className="border-white/30 text-white hover:bg-white/20">
+                                        Explore Dashboard
+                                    </Button>
+                                </Link>
                             </div>
                         </div>
-                        <div className="grid border-t border-white/10 bg-white/[0.025] sm:grid-cols-2 lg:grid-cols-4">{["100+ modules", "Realtime routing", "Secure workspace", "Global access"].map((item, index) => <div key={item} className="flex items-center gap-3 border-b border-white/10 p-4 last:border-b-0 sm:border-r lg:border-b-0"><motion.span className="h-2 w-2 rounded-full bg-primary" animate={{ opacity: [0.3, 1, 0.3] }} transition={{ duration: 1.8, delay: index * 0.3, repeat: Infinity }} /><span className="text-xs font-black uppercase text-slate-400">{item}</span></div>)}</div>
-                    </motion.div>
+                    </div>
                 </div>
             </section>
 
-            {/* Footer Dock */}
-            <footer className="relative overflow-hidden bg-black pb-8 pt-8">
-                <div className="container relative z-10 mx-auto px-4">
-                    <div className="tech-border-flow overflow-hidden rounded-[1.75rem] border border-white/10 bg-white/[0.035] backdrop-blur-2xl">
-                    <div className="grid gap-8 p-7 md:grid-cols-[1.5fr_1fr_1fr] md:p-10">
-                        <div><Link href="/" className="inline-flex"><BrandLogo imageClassName="h-9 max-w-[142px]" /></Link><p className="mt-5 max-w-md leading-7 text-muted-foreground">{settings?.metadata?.siteDescription || "The complete AI toolkit for modern creators and professionals. Built with cutting-edge technology."}</p><div className="mt-5 flex items-center gap-2"><span className="h-2 w-2 rounded-full bg-emerald-300 shadow-[0_0_14px_rgb(110_231_183)]" /><span className="text-xs font-black uppercase text-slate-500">All systems operational</span></div></div>
-                        <div><h4 className="mb-4 text-xs font-black uppercase text-slate-500">Product nodes</h4><div className="flex flex-wrap gap-2">{[["Features", "#features"], ["Marketing", "#ai-marketing"], ["Music", "#music-generation"], ["Pricing", "#pricing"], ["Tools", "#tools"]].map(([label, href]) => <a key={label} href={href} className="rounded-full border border-white/10 bg-black/35 px-3 py-2 text-xs font-bold text-slate-300 transition-all hover:-translate-y-0.5 hover:border-primary/40 hover:text-white">{label}</a>)}</div></div>
-                        <div><h4 className="mb-4 text-xs font-black uppercase text-slate-500">Protocol</h4><div className="space-y-2">{["Privacy Policy", "Terms of Service", "Cookie Policy"].map(item => <a key={item} href="#" className="group flex items-center justify-between rounded-xl px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-white/[0.05] hover:text-white"><span>{item}</span><ArrowRight className="h-3.5 w-3.5 opacity-0 transition-all group-hover:translate-x-1 group-hover:opacity-100" /></a>)}</div></div>
+            {/* Footer */}
+            <footer className="border-t border-border/40 bg-background pt-16 pb-8">
+                <div className="container mx-auto px-4">
+                    <div className="grid md:grid-cols-4 gap-12 mb-12">
+                        <div className="col-span-1 md:col-span-2 space-y-4">
+                            <Link href="/" className="flex items-center gap-2">
+                                <BrandLogo imageClassName="h-9 max-w-[142px]" />
+                            </Link>
+                            <p className="text-muted-foreground max-w-sm">
+                                {settings?.metadata?.siteDescription || "The complete AI toolkit for modern creators and professionals. Built with cutting-edge technology."}
+                            </p>
+                            <p className="text-sm text-muted-foreground">
+                                100+ AI Tools
+                            </p>
+                        </div>
+                        <div>
+                            <h4 className="font-bold mb-4">Product</h4>
+                            <ul className="space-y-2 text-sm text-muted-foreground">
+                                <li><a href="#features" className="hover:text-foreground transition-colors">Features</a></li>
+                                <li><a href="#ai-marketing" className="hover:text-foreground transition-colors">AI Marketing</a></li>
+                                <li><a href="#music-generation" className="hover:text-foreground transition-colors">Music Studio</a></li>
+                                <li><a href="#mobile-app" className="hover:text-foreground transition-colors">Mobile App</a></li>
+                                <li><a href="#pricing" className="hover:text-foreground transition-colors">Pricing</a></li>
+                                <li><a href="#" className="hover:text-foreground transition-colors">Changelog</a></li>
+                                <li><a href="#" className="hover:text-foreground transition-colors">Documentation</a></li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 className="font-bold mb-4">Legal</h4>
+                            <ul className="space-y-2 text-sm text-muted-foreground">
+                                <li><a href="#" className="hover:text-foreground transition-colors">Privacy Policy</a></li>
+                                <li><a href="#" className="hover:text-foreground transition-colors">Terms of Service</a></li>
+                                <li><a href="#" className="hover:text-foreground transition-colors">Cookie Policy</a></li>
+                            </ul>
+                        </div>
                     </div>
-                    <div className="flex flex-col items-center justify-between gap-4 border-t border-white/10 px-7 py-5 md:flex-row">
+                    <div className="border-t border-border/40 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
                         <p className="text-sm text-muted-foreground">
-                            © 2026 {settings?.metadata?.siteName || "TingAi"}. All rights reserved.
+                            © 2026 TingAi. All rights reserved.
                         </p>
 
                         <div className="flex gap-6">
@@ -1601,13 +1680,11 @@ export default function LandingPage() {
                             )}
                         </div>
                     </div>
-                    </div>
                 </div>
             </footer>
 
             {/* Video Modal */}
-            <VideoModal isOpen={isVideoOpen} onClose={() => setIsVideoOpen(false)} />
-            
+
             {/* Customization Request Bubble */}
             <AnimatePresence>
                 {showCustomBubble && (
@@ -1636,7 +1713,7 @@ export default function LandingPage() {
                             <div className="relative p-6 text-white bg-gradient-to-br from-primary via-ai-secondary to-ai-tertiary overflow-hidden">
                                 <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20" />
                                 <div className="absolute -right-6 -bottom-6 w-24 h-24 bg-white/10 rounded-full blur-xl" />
-                                
+
                                 <div className="relative z-10 space-y-1">
                                     <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-white/20 backdrop-blur-md">
                                         <Sparkles className="w-3 h-3 text-yellow-300 fill-yellow-300" />

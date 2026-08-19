@@ -59,6 +59,7 @@ export const AVAILABLE_FEATURES: FeatureItem[] = [
     // ========== SOCIAL MEDIA ==========
     { id: 'social', label: 'Social Media Suite', category: 'social', tokenCost: 15 },
     { id: 'whatsapp-agent', label: 'WhatsApp AI Agent', category: 'social', tokenCost: 5, isNew: true },
+    { id: 'instagram-agent', label: 'Instagram AI Agent', category: 'social', tokenCost: 5, isNew: true },
     { id: 'instagram-caption', label: 'Instagram Caption', category: 'social', tokenCost: 10, isNew: true },
     { id: 'twitter-thread', label: 'Twitter/X Thread', category: 'social', tokenCost: 15, isNew: true },
     { id: 'linkedin-post', label: 'LinkedIn Post', category: 'social', tokenCost: 10, isNew: true },

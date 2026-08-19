@@ -25,7 +25,6 @@ import {
   EyeOff
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { useSettings } from "@/contexts/SettingsContext";
 import { RecaptchaProvider, useRecaptcha } from "@/components/auth/RecaptchaProvider";
 import { BrandLogo } from "@/components/brand/BrandLogo";
 
@@ -55,7 +54,6 @@ function ForgotPasswordContent() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const { settings } = useSettings();
   const { toast } = useToast();
   const { executeRecaptcha } = useRecaptcha();
   const router = useRouter();

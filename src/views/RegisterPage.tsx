@@ -32,7 +32,6 @@ import {
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
-import { useSettings } from "@/contexts/SettingsContext";
 import { RecaptchaProvider, useRecaptcha } from "@/components/auth/RecaptchaProvider";
 import { BrandLogo } from "@/components/brand/BrandLogo";
 
@@ -76,7 +75,6 @@ function RegisterContent({ isAdmin = false }: RegisterPageProps) {
 
     const { register, isAuthenticated, user } = useAuth();
     const { executeRecaptcha } = useRecaptcha();
-    const { settings } = useSettings();
     const { toast } = useToast();
     const router = useRouter();
 
@@ -125,7 +123,7 @@ function RegisterContent({ isAdmin = false }: RegisterPageProps) {
                     });
                 } else {
                     toast({
-                        title: `Welcome to ${settings?.metadata?.siteName || "TingAi"}!`,
+                        title: "Welcome to TingAi!",
                         description: "Your account has been created successfully.",
                     });
 
@@ -212,7 +210,7 @@ function RegisterContent({ isAdmin = false }: RegisterPageProps) {
                                 Journey Today
                             </h1>
                             <p className="text-lg text-white/80 max-w-md">
-                                Join thousands of creators and professionals using {settings?.metadata?.siteName || "TingAi"}.
+                                Join thousands of creators and professionals using TingAi.
                             </p>
                         </div>
 
@@ -235,7 +233,7 @@ function RegisterContent({ isAdmin = false }: RegisterPageProps) {
 
                         <div className="p-6 bg-white/10 backdrop-blur-sm rounded-2xl">
                             <p className="text-white/90 mb-4">
-                                "{settings?.metadata?.siteName || "TingAi"} transformed how I create content. What used to take hours now takes minutes."
+                                "TingAi transformed how I create content. What used to take hours now takes minutes."
                             </p>
 
                             <div className="flex items-center gap-3">
@@ -251,7 +249,7 @@ function RegisterContent({ isAdmin = false }: RegisterPageProps) {
                     </div>
 
                     <p className="text-sm text-white/60">
-                        © 2026 {settings?.metadata?.siteName || "TingAi"}. All rights reserved.
+                        © 2026 TingAi. All rights reserved.
                     </p>
                 </div>
             </div>

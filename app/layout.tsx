@@ -48,7 +48,7 @@ export async function generateMetadata(): Promise<Metadata> {
             .single();
 
         if (data) {
-            if (data.site_name) siteName = data.site_name;
+            if (data.site_name) siteName = data.site_name === "AI Suite" ? "TingAi" : data.site_name;
             if (data.metadata?.siteDescription) description = data.metadata.siteDescription;
             if (data.metadata?.siteKeywords) {
                 keywords = data.metadata.siteKeywords.split(",").map((k: string) => k.trim());
@@ -93,8 +93,8 @@ export async function generateMetadata(): Promise<Metadata> {
             creator: "@aisuite",
         },
         icons: {
-            icon: "/favicon.png",
-            shortcut: "/favicon.ico",
+            icon: "/favicon.ico",
+            shortcut: "/favicon-16x16.png",
             apple: "/icons/icon-192x192.png",
         },
         manifest: "/manifest.json",
@@ -111,8 +111,8 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export const viewport: Viewport = {
     themeColor: [
-        { media: "(prefers-color-scheme: light)", color: "#050914" },
-        { media: "(prefers-color-scheme: dark)", color: "#050914" },
+        { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+        { media: "(prefers-color-scheme: dark)", color: "#030712" },
     ],
     width: "device-width",
     initialScale: 1,

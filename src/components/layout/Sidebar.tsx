@@ -168,11 +168,11 @@ function NavItemComponent({ item, isActive, isCollapsed, isMobile, onClose }: Na
                 }
             }}
             className={cn(
-                "group relative flex items-center gap-3 px-3 py-2.5 rounded-xl transition-[background-color,color,box-shadow,transform,border-color] duration-200",
-                "border border-transparent hover:bg-sidebar-accent hover:border-sidebar-border/80 hover:shadow-[inset_0_1px_0_hsl(0_0%_100%/0.04)]",
+                "group relative flex items-center gap-3 px-3 py-2 rounded-lg transition-[background-color,color,box-shadow,transform] duration-200",
+                "hover:bg-sidebar-accent",
                 isActive
-                    ? "bg-gradient-to-r from-primary/[0.22] via-primary/[0.12] to-ai-secondary/10 text-sidebar-foreground border-primary/30 shadow-[0_0_24px_hsl(var(--primary)/0.12),inset_0_1px_0_hsl(0_0%_100%/0.06)]"
-                    : "text-sidebar-foreground/[0.64] hover:text-sidebar-foreground",
+                    ? "bg-gradient-to-r from-primary/15 to-primary/5 text-primary"
+                    : "text-sidebar-foreground/60 hover:text-sidebar-foreground",
                 isCollapsed && !isMobile && "justify-center px-2",
                 item.isComingSoon && "opacity-50 cursor-not-allowed select-none hover:bg-transparent"
             )}
@@ -188,7 +188,7 @@ function NavItemComponent({ item, isActive, isCollapsed, isMobile, onClose }: Na
                 className={cn(
                     "flex-shrink-0 w-[18px] h-[18px] transition-all duration-200",
                     !item.isComingSoon && "group-hover:scale-105",
-                    isActive ? "text-ai-secondary drop-shadow-[0_0_10px_hsl(var(--ai-secondary)/0.35)]" : "group-hover:text-ai-secondary"
+                    isActive && "text-primary"
                 )}
             />
 
@@ -361,7 +361,7 @@ function SidebarContent({ isCollapsed, isMobile, onClose, onToggleCollapse }: Si
     const totalFeatures = navigationCategories.reduce((acc, cat) => acc + cat.items.length, 0);
 
     return (
-        <div className="flex flex-col h-full border-r border-sidebar-border/80 bg-sidebar/[0.88] backdrop-blur-2xl shadow-[18px_0_60px_-44px_rgb(0_0_0)]">
+        <div className="flex flex-col h-full bg-sidebar">
             {/* Header */}
             <div className={cn(
                 "flex items-center h-16 px-4 relative",
@@ -374,7 +374,7 @@ function SidebarContent({ isCollapsed, isMobile, onClose, onToggleCollapse }: Si
                 )}
 
                 {isCollapsed && !isMobile && (
-                    <BrandLogo variant="mark" className="h-9 w-9 shadow-lg shadow-primary/25 ring-1 ring-white/10" />
+                    <BrandLogo variant="mark" className="h-9 w-9 shadow-lg shadow-primary/25" />
                 )}
 
                 {!isMobile && (
@@ -385,7 +385,7 @@ function SidebarContent({ isCollapsed, isMobile, onClose, onToggleCollapse }: Si
                         className={cn(
                             "h-8 w-8 text-muted-foreground hover:text-foreground transition-all duration-300",
                             isCollapsed
-                                ? "absolute -right-4 top-1/2 -translate-y-1/2 bg-card/95 shadow-xl z-50 hover:bg-accent rounded-full border border-border/70"
+                                ? "absolute -right-4 top-1/2 -translate-y-1/2 bg-background shadow-sm z-50 hover:bg-accent rounded-full"
                                 : "rounded-lg"
                         )}
                     >
@@ -418,7 +418,7 @@ function SidebarContent({ isCollapsed, isMobile, onClose, onToggleCollapse }: Si
 
                     {/* Upgrade Prompt for Unsubscribed Users */}
                     {!user?.planName && user?.role !== 'admin' && (!isCollapsed || isMobile) && (
-                        <div className="mx-2 px-4 py-6 mt-4 rounded-2xl bg-gradient-to-br from-primary/[0.14] to-ai-secondary/10 border border-primary/25 shadow-[0_0_32px_hsl(var(--primary)/0.12)] animate-in fade-in slide-in-from-bottom-4 duration-500">
+                        <div className="mx-2 px-4 py-6 mt-4 rounded-2xl bg-gradient-to-br from-primary/10 to-ai-secondary/10 border border-primary/20 animate-in fade-in slide-in-from-bottom-4 duration-500">
                             <div className="flex flex-col items-center text-center gap-3">
                                 <div className="w-12 h-12 rounded-2xl bg-primary/20 flex items-center justify-center mb-1">
                                     <Crown className="w-6 h-6 text-primary" />
@@ -445,7 +445,7 @@ function SidebarContent({ isCollapsed, isMobile, onClose, onToggleCollapse }: Si
             {/* Footer - Token Progress */}
             {(!isCollapsed || isMobile) && user && (
                 <div className="p-3 mt-auto">
-                    <div className="relative p-4 rounded-2xl overflow-hidden bg-sidebar-accent/[0.45] border border-sidebar-border/70 shadow-[inset_0_1px_0_hsl(0_0%_100%/0.05)]">
+                    <div className="relative p-4 rounded-2xl overflow-hidden bg-sidebar-accent/30">
                         <div className="flex items-center justify-between mb-2">
                             <span className="text-xs font-semibold text-muted-foreground">Monthly Tokens</span>
                             <span className="text-xs font-bold text-primary">

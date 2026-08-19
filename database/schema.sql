@@ -1283,4 +1283,122 @@ begin
     end if;
 end $$;
 
+-- ═══════════════════════════════════════════════════════════════════════════
+-- 33. Instagram AI Automation & Post Scheduler
+-- ═══════════════════════════════════════════════════════════════════════════
+
+create table if not exists instagram_agents (
+    id uuid default uuid_generate_v4() primary key,
+    user_email text not null unique references users(email) on delete cascade on update cascade,
+    is_active boolean default false,
+    instagram_business_account_id text,
+    page_access_token text,
+    username text default 'mock_instagram_user',
+    system_prompt text default 'You are a helpful and friendly AI assistant for Instagram.',
+    model_id text default 'gemini-2.5-flash',
+    tone text default 'friendly',
+    personality text default 'professional',
+    dm_reply_behavior text default 'auto' check (dm_reply_behavior in ('auto', 'manual')),
+    comment_reply_behavior text default 'auto' check (comment_reply_behavior in ('auto', 'manual')),
+    response_delay int default 0,
+    created_at timestamptz default now(),
+    updated_at timestamptz default now()
+);
+
+-- Check for column existence in case of incremental updates
+do $$
+begin
+    if not exists (select 1 from information_schema.columns where table_name = 'instagram_agents' and column_name = 'username') then
+        alter table instagram_agents add column username text default 'mock_instagram_user';
+    end if;
+    if not exists (select 1 from information_schema.columns where table_name = 'instagram_agents' and column_name = 'dm_reply_behavior') then
+        alter table instagram_agents add column dm_reply_behavior text default 'auto';
+    end if;
+    if not exists (select 1 from information_schema.columns where table_name = 'instagram_agents' and column_name = 'comment_reply_behavior') then
+        alter table instagram_agents add column comment_reply_behavior text default 'auto';
+    end if;
+end $$;
+
+create index if not exists idx_instagram_agents_email on instagram_agents(user_email);
+alter table instagram_agents enable row level security;
+
+do $$
+begin
+    if not exists (select 1 from pg_policies where tablename = 'instagram_agents' and policyname = 'Allow full access on instagram_agents') then
+        create policy "Allow full access on instagram_agents" on instagram_agents for all using (true) with check (true);
+    end if;
+end $$;
+
+create table if not exists instagram_posts (
+    id uuid default uuid_generate_v4() primary key,
+    user_email text not null references users(email) on delete cascade on update cascade,
+    media_url text not null,
+    caption text,
+    scheduled_at timestamptz not null,
+    published_at timestamptz,
+    status text default 'scheduled' check (status in ('scheduled', 'published', 'failed')),
+    error_message text,
+    created_at timestamptz default now(),
+    updated_at timestamptz default now()
+);
+
+create index if not exists idx_instagram_posts_user on instagram_posts(user_email);
+create index if not exists idx_instagram_posts_status on instagram_posts(status);
+alter table instagram_posts enable row level security;
+
+do $$
+begin
+    if not exists (select 1 from pg_policies where tablename = 'instagram_posts' and policyname = 'Allow full access on instagram_posts') then
+        create policy "Allow full access on instagram_posts" on instagram_posts for all using (true) with check (true);
+    end if;
+end $$;
+
+create table if not exists instagram_dm_logs (
+    id uuid default uuid_generate_v4() primary key,
+    user_email text not null references users(email) on delete cascade on update cascade,
+    sender_id text not null,
+    sender_username text not null,
+    message_text text not null,
+    reply_text text,
+    tokens_consumed int default 0,
+    status text default 'success' check (status in ('success', 'failed')),
+    error_message text,
+    created_at timestamptz default now()
+);
+
+create index if not exists idx_instagram_dm_logs_user on instagram_dm_logs(user_email);
+alter table instagram_dm_logs enable row level security;
+
+do $$
+begin
+    if not exists (select 1 from pg_policies where tablename = 'instagram_dm_logs' and policyname = 'Allow full access on instagram_dm_logs') then
+        create policy "Allow full access on instagram_dm_logs" on instagram_dm_logs for all using (true) with check (true);
+    end if;
+end $$;
+
+create table if not exists instagram_comments_logs (
+    id uuid default uuid_generate_v4() primary key,
+    user_email text not null references users(email) on delete cascade on update cascade,
+    post_id text not null,
+    post_caption text,
+    comment_id text not null,
+    commenter_username text not null,
+    comment_text text not null,
+    reply_text text,
+    tokens_consumed int default 0,
+    status text default 'success' check (status in ('success', 'failed')),
+    error_message text,
+    created_at timestamptz default now()
+);
+
+create index if not exists idx_instagram_comments_logs_user on instagram_comments_logs(user_email);
+alter table instagram_comments_logs enable row level security;
+
+do $$
+begin
+    if not exists (select 1 from pg_policies where tablename = 'instagram_comments_logs' and policyname = 'Allow full access on instagram_comments_logs') then
+        create policy "Allow full access on instagram_comments_logs" on instagram_comments_logs for all using (true) with check (true);
+    end if;
+end $$;
+
 

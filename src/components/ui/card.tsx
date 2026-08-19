@@ -3,23 +3,23 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const cardVariants = cva(
-    "rounded-2xl border bg-card text-card-foreground shadow-[0_20px_54px_-42px_rgb(0_0_0)] transition-all duration-300",
+    "rounded-2xl border bg-card text-card-foreground transition-all duration-300",
     {
         variants: {
             variant: {
                 // Default card - subtle and clean
-                default: "border-border/70 bg-card/[0.72] backdrop-blur-xl shadow-sm shadow-black/20 hover:border-primary/[0.24] hover:shadow-lg hover:shadow-black/25",
+                default: "border-border/50 shadow-sm hover:shadow-md",
                 // Elevated card with more shadow
-                elevated: "border-border/70 bg-card/[0.82] backdrop-blur-xl shadow-lg shadow-black/[0.24] hover:shadow-xl",
+                elevated: "border-border/50 shadow-lg hover:shadow-xl",
                 // Glass effect card
-                glass: "bg-white/[0.055] backdrop-blur-2xl border-white/[0.12] shadow-lg shadow-black/[0.24]",
+                glass: "bg-card/50 backdrop-blur-xl border-border/30 shadow-lg",
                 // Gradient border card
                 gradient:
                     "relative before:absolute before:inset-0 before:rounded-2xl before:p-[1px] before:bg-gradient-to-r before:from-primary before:via-ai-secondary before:to-ai-tertiary before:-z-10 shadow-lg",
                 // Interactive card with hover lift
-                interactive: "border-border/70 bg-card/[0.72] backdrop-blur-xl hover:border-primary/[0.35] hover:-translate-y-1 hover:shadow-xl hover:shadow-primary/10 cursor-pointer",
+                interactive: "border-border/50 hover:border-primary/25 hover:-translate-y-1 hover:shadow-xl hover:shadow-primary/5 cursor-pointer",
                 // Soft colored background
-                soft: "bg-muted/[0.65] border-border/[0.45] hover:bg-muted/80",
+                soft: "bg-muted/50 border-transparent hover:bg-muted/70",
                 // Outline only
                 outline: "bg-transparent border-border hover:border-primary/50",
                 // Feature card with top accent
@@ -33,7 +33,7 @@ const cardVariants = cva(
                 // Pricing card
                 pricing: "bg-gradient-to-br from-primary/5 to-ai-secondary/5 border-primary/20 shadow-lg shadow-primary/5",
                 // Dashboard card
-                dashboard: "bg-card/[0.72] backdrop-blur-xl border-border/70 hover:border-primary/25 hover:shadow-lg hover:shadow-primary/[0.08]",
+                dashboard: "bg-card/50 backdrop-blur-sm border-border/50 hover:border-primary/20 hover:shadow-lg hover:shadow-primary/5",
                 // Gradient filled
                 "gradient-filled": "border-0 bg-gradient-to-br from-primary to-ai-secondary text-white shadow-lg shadow-primary/25",
             },
@@ -137,7 +137,7 @@ const PremiumCard = React.forwardRef<
         <div
             ref={ref}
             className={cn(
-                "relative rounded-2xl bg-card/90 p-6 transition-all duration-300 backdrop-blur-xl shadow-2xl shadow-black/30",
+                "relative rounded-2xl bg-card p-6 transition-all duration-300",
                 className
             )}
             {...props}
@@ -157,9 +157,9 @@ const GlassCard = React.forwardRef<
         ref={ref}
         className={cn(
             "rounded-2xl p-6 transition-all duration-300",
-            "bg-white/[0.055] backdrop-blur-2xl",
-            "border border-white/[0.12]",
-            "shadow-xl shadow-black/25",
+            "bg-card/40 backdrop-blur-xl",
+            "border border-border/30",
+            "shadow-xl shadow-black/5",
             className
         )}
         {...props}
@@ -198,8 +198,8 @@ const FeatureCard = React.forwardRef<
     <div
         ref={ref}
         className={cn(
-            "group relative rounded-2xl border border-border/70 bg-card/[0.72] p-6 backdrop-blur-xl transition-all duration-300",
-            "hover:border-primary/[0.35] hover:-translate-y-1 hover:shadow-xl hover:shadow-primary/10",
+            "group relative rounded-2xl border border-border/50 bg-card p-6 transition-all duration-300",
+            "hover:border-primary/25 hover:-translate-y-1 hover:shadow-xl hover:shadow-primary/5",
             "cursor-pointer overflow-hidden",
             className
         )}

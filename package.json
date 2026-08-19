@@ -8,7 +8,15 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "migrate": "npx tsx database/migrate.ts"
+    "migrate": "npx tsx database/migrate.ts",
+    "mobile:install": "cd mobile && npm install",
+    "mobile:prebuild": "cd mobile && npx expo prebuild",
+    "mobile:prebuild:clean": "cd mobile && npx expo prebuild --clean",
+    "mobile:start": "cd mobile && npx expo start",
+    "android": "cd mobile && npx expo run:android",
+    "ios": "cd mobile && npx expo run:ios",
+    "mobile:build:android": "cd mobile && npx eas build --platform android",
+    "mobile:build:ios": "cd mobile && npx eas build --platform ios"
   },
   "dependencies": {
     "@ducanh2912/next-pwa": "^10.2.9",
@@ -104,7 +112,6 @@
     "tailwind-merge": "^3.3.1",
     "tailwind-scrollbar": "^3.0.0",
     "tailwindcss-animate": "^1.0.7",
-    "three": "^0.185.1",
     "tldts": "^7.0.19",
     "tough-cookie": "^6.0.0",
     "turndown": "^7.2.4",
@@ -121,7 +128,6 @@
     "@types/nodemailer": "^7.0.11",
     "@types/react": "^19.1.13",
     "@types/react-dom": "^19.1.9",
-    "@types/three": "^0.185.4",
     "autoprefixer": "^10.4.21",
     "eslint": "^9.36.0",
     "eslint-plugin-react-hooks": "^5.2.0",

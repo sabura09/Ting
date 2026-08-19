@@ -6,18 +6,18 @@ import { Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-    "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl text-sm font-semibold transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+    "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
     {
         variants: {
             variant: {
                 default:
-                    "bg-gradient-to-r from-primary to-sky-500 text-primary-foreground shadow-lg shadow-primary/[0.24] ring-1 ring-white/10 hover:shadow-xl hover:shadow-primary/[0.34] hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98]",
+                    "bg-primary text-primary-foreground shadow-sm shadow-primary/20 hover:bg-primary/90 hover:shadow-md hover:shadow-primary/25 active:scale-[0.98]",
                 destructive:
                     "bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90 active:scale-[0.98]",
                 outline:
-                    "border border-input bg-card/60 shadow-sm shadow-black/20 hover:bg-accent hover:text-accent-foreground hover:border-primary/35 active:scale-[0.98]",
+                    "border border-input bg-background hover:bg-accent hover:text-accent-foreground active:scale-[0.98]",
                 secondary:
-                    "bg-muted text-foreground border border-border/60 hover:bg-muted/80 hover:border-primary/25 active:scale-[0.98]",
+                    "bg-secondary text-secondary-foreground hover:bg-secondary/80 active:scale-[0.98]",
                 ghost:
                     "hover:bg-accent hover:text-accent-foreground",
                 link:
@@ -25,15 +25,15 @@ const buttonVariants = cva(
                 premium:
                     "relative bg-gradient-to-r from-primary to-ai-secondary text-white shadow-lg shadow-primary/30 hover:shadow-xl hover:shadow-primary/40 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] overflow-hidden before:absolute before:inset-0 before:bg-gradient-to-r before:from-primary/80 before:to-ai-secondary/80 before:opacity-0 before:transition-opacity hover:before:opacity-100 [&>*]:relative [&>*]:z-10",
                 glass:
-                    "bg-white/[0.08] backdrop-blur-md border border-white/15 text-foreground shadow-sm shadow-black/20 hover:bg-white/[0.14] hover:border-white/25",
+                    "bg-white/10 backdrop-blur-md border border-white/20 text-foreground hover:bg-white/20",
                 success:
                     "bg-success text-success-foreground shadow-sm shadow-success/20 hover:bg-success/90 active:scale-[0.98]",
                 soft:
                     "bg-primary/10 text-primary hover:bg-primary/15 active:scale-[0.98]",
                 white:
-                    "bg-white text-slate-950 shadow-sm hover:bg-slate-100 active:scale-[0.98]",
+                    "bg-white text-gray-900 shadow-sm hover:bg-gray-50 active:scale-[0.98]",
                 dark:
-                    "bg-slate-950 text-white border border-white/10 hover:bg-slate-900 active:scale-[0.98]",
+                    "bg-gray-900 text-white hover:bg-gray-800 active:scale-[0.98]",
                 glow:
                     "bg-primary text-primary-foreground shadow-lg shadow-primary/40 hover:shadow-xl hover:shadow-primary/50 active:scale-[0.98] relative before:absolute before:inset-0 before:rounded-xl before:bg-primary before:blur-lg before:opacity-50 before:-z-10",
             },
